@@ -1,0 +1,1 @@
+E:\HG\PythonExamples\venv\Scripts\pyuic5.exe -x GUI\ui_window_01.ui -o GUI\ui_window_01.py
