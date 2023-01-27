@@ -71,10 +71,43 @@ b.extend([333, 444])
 print(b)  # [0, 576, 111, 333, 444]
 print(b.pop())  # 444
 print(b)  # [0, 576, 111, 333]
-b.remove(111)
-print(b)  # [0, 576, 111, 333]
+b.remove(111)  # exception if not exists
+print(b)  # [0, 576, 333]
 
 # reverse
 b.reverse()
-print(b)  # [333, 111, 576, 0]
+print(b)  # [333, 576, 0]
 # from collections import OrderedDict
+
+# multi type
+a = [1, 2, [3, 4], 5, 'hello']
+print(a)  # [1, 2, [3, 4], 5, 'hello']
+a[2][0] = 55
+print(a)  # [1, 2, [55, 4], 5, 'hello']
+
+# length
+print(len(a))  # 5
+a.clear()
+print(len(a))  # 0
+print()
+
+# stack
+stk = list()
+stk.append(3)
+stk.append(2)
+stk.append(4)
+stk.append(1)
+for _ in range(4):
+    print(stk.pop(), end=' ')  # 1 4 2 3
+print()
+
+# queue
+queue = list()
+queue.insert(0, 3)
+queue.insert(0, 2)
+queue.insert(0, 4)
+queue.insert(0, 1)
+for _ in range(4):
+    print(queue.pop(), end=' ')  # 3 2 4 1
+print()
+
