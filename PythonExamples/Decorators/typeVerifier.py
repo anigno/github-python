@@ -1,7 +1,7 @@
 import inspect
 
 
-def typeVerifier(func):
+def typeVerifierDecorator(func):
     """
     Decorator, verifies function's parameters values types and return type are as declared
     """
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         pass
 
 
-    @typeVerifier
+    @typeVerifierDecorator
     def myFunc(a: int, b: str, c, e: dict, d: myDict) -> str:
         print(a, b, c, d, e)
         return 'aaa'

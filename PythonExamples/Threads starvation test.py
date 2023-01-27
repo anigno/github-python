@@ -2,12 +2,12 @@ import math
 import threading
 import time
 
-from Decorators.typeVerifier import typeVerifier
+from Decorators.typeVerifier import typeVerifierDecorator
 
 totalTime=[0,0,0]
 breakAll=False
 
-@typeVerifier
+@typeVerifierDecorator
 def listSum(aList:list)->float:
     total=0
     for item in aList:

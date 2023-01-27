@@ -18,7 +18,7 @@ def time_measure_between_calls(func):
     functionsDict = {}
 
     def wrapper(*args, **kwargs):
-        t = time.clock()
+        t = time.process_time()
         if func.__name__ in functionsDict:
             print(func.__name__, t - functionsDict[func.__name__], 'from last call')
         functionsDict[func.__name__] = t
