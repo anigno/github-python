@@ -1,0 +1,33 @@
+message sending
+    message communicator - preparing messages for sending, receiving messages
+        generate message id
+        serialize message data to bytes
+        convert message type to bytes
+        add message type bytes to message bytes
+        call partition manager with [message type bytes][message bytes]
+    partition manager
+        get part bytes from [message type bytes][message bytes]
+        create messages part bytes from [message id][part number][number of parts][part bytes]
+        calculate crc for parts  [crc][message part bytes]
+        add message parts to reliability manager with message id , part number and number of parts
+
+    reliability manager
+        on message parts added for sending
+            add to sending dict by message id and part, set resend counter
+            set receive timeout
+            send message parts
+        on timeout for message (threaded periodic)
+            decrease resend counter
+            send message part
+        on message part received
+            raise message part received event
+
+
+
+message part received
+    check crc
+        if crc failed
+            ignore message part
+        if crc succeeded
+            extruct message id, part number, number of parts, message type
+

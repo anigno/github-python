@@ -13,9 +13,7 @@ class Partition:
         """
         self.index = index
         self.data_bytes = data_bytes
-        self.ack_received: bool = False
-        # utc time to wait for ack
-        self.receive_timeout: int = TimeUtils.utc_timestamp() + receive_timeout_interval
+
 
     def __repr__(self):
         return f'[Partition: {self.index},{self.data_bytes}]'
