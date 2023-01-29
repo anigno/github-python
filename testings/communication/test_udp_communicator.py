@@ -23,12 +23,12 @@ class TestUdpCommunicator(unittest.TestCase):
         com1.start_receiving()
         com2.start_receiving()
 
-        time.sleep(1)
+        time.sleep(0.1)
         com2.send_to('127.0.0.1', 1001, self.test_data_8k)
         time.sleep(0.1)
         com1.send_to('127.0.0.2', 1002, self.test_data_8k)
 
-        time.sleep(1)
+        time.sleep(0.1)
         self.assertEqual(self.receive_counter, 2)
         com1.close()
         com2.close()
