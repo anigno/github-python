@@ -1,5 +1,10 @@
 class GenericEvent:
-    def __init__(self):
+    """
+    enable registration (event) and calling (raise) of handlers collections
+    """
+
+    def __init__(self, event_descriptor: str = 'NoName'):
+        self.event_descriptor = event_descriptor
         self._handlers = []
 
     def raise_event(self, data: any):

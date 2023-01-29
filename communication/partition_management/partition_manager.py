@@ -1,15 +1,13 @@
 from typing import List
 
-class Partition:
-    def __init__(self, index: int, data_bytes: bytes,receive_timeout_interval:int):
-        self.index = index
-        self.data_bytes = data_bytes
-        self.ack_received:bool=False
-        self.receive_timeout:int=TimeUtils.utc_time+receive_timeout_interval
-    def __repr__(self):
-        return f'[Partition: {self.index},{self.data_bytes}]'
+from common.generic_event import GenericEvent
+from communication.partition_management.Partition import Partition
 
 class PartitionManager:
+    """
+
+    """
+
     def __init__(self, max_data_size=1024, old_data_clean_interval_sec=3.0):
         """
         ctor
@@ -18,12 +16,12 @@ class PartitionManager:
         """
         self.old_data_clean_interval_sec = old_data_clean_interval_sec
         self.max_data_size = max_data_size
+        self.partition_timeout = GenericEvent('partition_timeout')
 
     def get_data_parts(self, data_bytes: bytes) -> List[Partition]:
         ret = []
-        for i, j in enumerate(range(0, len(data_bytes), self.max_data_size)):
-            partition = Partition(i, data_bytes[j:j + self.max_data_size])
-
+        for index, cnt in enumerate(range(0, len(data_bytes), self.max_data_size)):
+            partition = Partition(index, data_bytes[cnt:cnt + self.max_data_size])
             ret.append(partition)
         return ret
 

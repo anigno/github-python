@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 class TimeUtils:
 
@@ -11,12 +12,12 @@ class TimeUtils:
         return datetime.now()
 
     @staticmethod
-    def utc_timestamp(to_int=True) -> float:
+    def utc_timestamp(to_int=True) -> Union[float, int]:
         ret = TimeUtils.utc_now().timestamp()
         return ret if not to_int else int(ret)
 
     @staticmethod
-    def local_timestamp(to_int=True) -> float:
+    def local_timestamp(to_int=True) -> Union[float, int]:
         ret = TimeUtils.local_now().timestamp()
         return ret if not to_int else int(ret)
 
@@ -36,4 +37,4 @@ if __name__ == '__main__':
     print(tl)
     print(TimeUtils.format_time(tu))
     tu = TimeUtils.utc_timestamp(to_int=True)
-    print(tu,TimeUtils.format_timestamp(tu))
+    print(tu, TimeUtils.format_timestamp(tu))
