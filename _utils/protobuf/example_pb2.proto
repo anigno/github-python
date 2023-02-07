@@ -1,0 +1,15 @@
+syntax = "proto2";
+package messages;
+message prMessageA{
+    optional uint32 uint_value = 1[default=0xffffffff];
+    optional string string_value = 2 [default="EMPTY"];
+	 optional float float_value=3;
+}
+message prMessageB{
+    optional prMessageA message_a_value = 1;
+	required bool required_bool_value = 9;
+    repeated string list_string = 2;
+	map<string,int32> dictionary_string_int_value=20;
+}
+
+
