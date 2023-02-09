@@ -1,33 +1,31 @@
-message sending
-    message communicator - preparing messages for sending, receiving messages
-        generate message id
-        serialize message data to bytes
-        convert message type to bytes
-        add message type bytes to message bytes
-        call partition manager with [message type bytes][message bytes]
-    partition manager
-        get part bytes from [message type bytes][message bytes]
-        create messages part bytes from [message id][part number][number of parts][part bytes]
-        calculate crc for parts  [crc][message part bytes]
-        add message parts to reliability manager with message id , part number and number of parts
-
-    reliability manager
-        on message parts added for sending
-            add to sending dict by message id and part, set resend counter
-            set receive timeout
-            send message parts
-        on timeout for message (threaded periodic)
-            decrease resend counter
-            send message part
-        on message part received
-            raise message part received event
+message data sending [data bytes] to ip-endpoint
+    generate message id
+    generate partitions [message id][part number][total parts][part data bytes] as [partition data]
+    add crc [crc][partition data] as [crc partition data]
+    add partitions to reliability manager sent-parts by: message id:part number:[crc partition data],resend-left, next resend timeout
+    send all [crc partition data] to ip-endpoint
+message data received [crc partition data] from sender-ip-endpoint
+    split to [crc][partition data]
+    verify crc?
+    if crc wrong ignore and return
+    extract [message id][part number][total parts][part data bytes] from [partition data]
+    send ack-message to sender-ip-endpoint (ack-message: message id,part number)
+    add receive part to partition manager received-parts by message id:part number:[partition data]
+    if received [message id] [total parts] exists in received-parts, raise event message data received and remove from received-parts
+ack message received
+    reliability manager remove part from sent-parts
+    if no parts for message id left raise event message sent successfully
+reliability manager old message parts search to raise message send fail
+partition manager old message parts timeout to clear old message parts for un received messages
 
 
 
-message part received
-    check crc
-        if crc failed
-            ignore message part
-        if crc succeeded
-            extruct message id, part number, number of parts, message type
+udp communicator
+partition manager
+reliability manager
+partition helper
+
+
+
+
 
