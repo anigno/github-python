@@ -30,6 +30,8 @@ class TestUdpCommunicator(unittest.TestCase):
 
         time.sleep(0.1)
         self.assertEqual(self.receive_counter, 2)
+        time.sleep(1)
+
         com1.close()
         com2.close()
         print('end')

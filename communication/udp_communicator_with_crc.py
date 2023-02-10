@@ -17,10 +17,10 @@ class UdpCommunicatorWithCrc(UdpCommunicator):
         byte_array = self.crc_provider.add_crc(byte_array)
         super().send_to(target_ip, target_port, byte_array)
 
-    def _data_received_handling(self, received_crc_and_data_bytes, sender_endpoint_tuple):
+    def _raise_data_received(self, received_crc_and_data_bytes, sender_endpoint_tuple):
         crc_result = self.crc_provider.verify_crc(received_crc_and_data_bytes)
         if crc_result.is_crc_ok:
-            super()._data_received_handling(crc_result.byte_array, sender_endpoint_tuple)
+            super()._raise_data_received(crc_result.byte_array, sender_endpoint_tuple)
         else:
             event_args = CrcErrorEventArgs(sender_endpoint_tuple=sender_endpoint_tuple)
             self.on_crc_error.raise_event(event_args)
