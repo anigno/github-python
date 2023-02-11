@@ -1,13 +1,18 @@
 import argparse
+import logging
 import os
-from datetime import datetime
 from os import path
 from typing import Optional
-
 from pytube import YouTube
+
+from logging_provider.logging_initiator import LoggingInitiator
 
 class YouTubeDownloader:
     def __init__(self):
+        LoggingInitiator.init_logging('logging_config.json')
+        # self.logger = logging.getLogger('main_logger')
+        self.logger = logging.getLogger('stream_only_logger')
+
         self.args: Optional[argparse.Namespace] = None
         self.youtube_downloader: Optional[YouTube] = None
         self.init_argparse()
@@ -25,14 +30,14 @@ class YouTubeDownloader:
         if not path.exists(output_folder):
             os.mkdir(output_folder)
         yt = YouTube(url_string)
-        print(f'{datetime.now().strftime("%H:%M:%S")} preparing: {url_string}')
+        self.logger.debug(f'preparing: {url_string}')
         mp4_files = yt.streams.filter(file_extension='mp4')
         highest_res = mp4_files.get_highest_resolution()
-        print(
-            f'{datetime.now().strftime("%H:%M:%S")} start download: [{highest_res.default_filename}] '
-            f'at resolution: {highest_res.resolution} size: {int(highest_res.filesize/1024/1024)}M')
+        self.logger.debug(
+            f' start download: [{highest_res.default_filename}] '
+            f'at resolution: {highest_res.resolution} size: {int(highest_res.filesize / 1024 / 1024)}M')
         highest_res.download(output_path=output_folder, filename=highest_res.default_filename)
-        print(f'{datetime.now().strftime("%H:%M:%S")} finished download: [{highest_res.default_filename}]')
+        self.logger.debug(f' finished download: [{highest_res.default_filename}]')
 
 if __name__ == '__main__':
     ytd = YouTubeDownloader()
