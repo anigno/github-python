@@ -1,14 +1,18 @@
 import json
 import logging.config
 import logging.handlers
+import os
 import random
 import time
 
 class LoggingInitiator:
     @staticmethod
-    def init_logging():
-        logging_config_file = 'logging_config.json'
-        logging.config.dictConfig(json.load(open(logging_config_file, 'r')))
+    def init_logging(logging_config_file: str = 'logging_config.json'):
+        abs_path=os.path.abspath(logging_config_file)
+        if not os.path.exists(abs_path):
+            raise FileNotFoundError(abs_path)
+        logging_config_file = logging_config_file
+        logging.config.dictConfig(json.load(open(abs_path, 'r')))
         logging.addLevelName(logging.WARNING, "WARN")
         logging.addLevelName(logging.CRITICAL, "FATAL")
 
