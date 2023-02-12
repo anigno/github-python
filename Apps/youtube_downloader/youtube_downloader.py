@@ -9,9 +9,9 @@ from logging_provider.logging_initiator import LoggingInitiator
 
 class YouTubeDownloader:
     def __init__(self):
-        LoggingInitiator.init_logging('logging_config.json')
+        LoggingInitiator()
         # self.logger = logging.getLogger('main_logger')
-        self.logger = logging.getLogger('stream_only_logger')
+        self.logger = logging.getLogger(LoggingInitiator.STREAM_LOGGER)
 
         self.args: Optional[argparse.Namespace] = None
         self.youtube_downloader: Optional[YouTube] = None
