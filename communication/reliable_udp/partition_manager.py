@@ -1,8 +1,9 @@
 from communication.reliable_udp.partition import Partition
 
 class PartitionManager:
-    def __init__(self, max_partition_size: int):
+    def __init__(self, max_partition_size: int, resend_count: int):
         self.max_partition_size = max_partition_size
+        self.resend_count = resend_count
 
     def create_partitions(self, data_bytes: bytes, message_id: int, target_ip: str, target_port: int) -> \
             list[Partition] | None:
@@ -14,7 +15,7 @@ class PartitionManager:
 
         for part_number, part_data_bytes in enumerate(parts_data_bytes):
             partition = Partition(message_id, part_number, len(parts_data_bytes), part_data_bytes, target_ip,
-                                  target_port)
+                                  target_port, 0.0, self.resend_count)
             partitions.append(partition)
         return partitions
 
