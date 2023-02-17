@@ -1,14 +1,14 @@
 import time
 import unittest
 
-from communication.udp_communicator import BytesReceivedEventArgs, UdpCommunicator
+from communication.udp_communicator import DataReceivedEventArgs, UdpCommunicator
 
 class TestUdpCommunicator(unittest.TestCase):
     def setUp(self) -> None:
         self.test_data_8k = 1024 * b'12345678'
         self.receive_counter = 0
 
-    def event_handler(self, event_args: BytesReceivedEventArgs):
+    def event_handler(self, event_args: DataReceivedEventArgs):
         print(f'{self.receive_counter} received from: {event_args.sender_endpoint_tuple} '
               f'data of length: {len(event_args.received_data_bytes)}')
         self.assertEqual(event_args.received_data_bytes, self.test_data_8k)
@@ -32,8 +32,8 @@ class TestUdpCommunicator(unittest.TestCase):
         self.assertEqual(self.receive_counter, 2)
         time.sleep(1)
 
-        com1.close()
-        com2.close()
+        # com1.close()
+        # com2.close()
         print('end')
 
 

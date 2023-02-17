@@ -1,3 +1,6 @@
 from collections import namedtuple
 
-PeriodicTask = namedtuple('PeriodicTask', ['taskFunction', 'periodic', 'interval'])
+PeriodicTaskTuple = namedtuple('PeriodicTaskDescriptor', ['taskFunction', 'periodic', 'interval'])
+
+a = PeriodicTaskTuple('func', 4, 30)
+print(a)
