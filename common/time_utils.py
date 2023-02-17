@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Union
 
 class TimeUtils:
+    MAX_TIMESTAMP = 9999999999
 
     @staticmethod
     def utc_now() -> datetime:
