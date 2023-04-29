@@ -1,0 +1,4 @@
+version 1.0
+* added alarm mode
+* added trigger button in web page
+* web page refresh by parameter
