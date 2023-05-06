@@ -39,17 +39,18 @@ class RequestHandler(BaseHTTPRequestHandler):
         system_message = f'[{play_mode}][V: {play_volume}]'
         b_Html = b'<html>' \
                  b'<head>' \
-                 b'<META http-equiv=\"refresh\" content=\"' + str(REFRESH_WEB_SECS).encode() + b';URL=/\">' \
-                                                                                               b'</head>' \
-                                                                                               b'<body>' \
-                                                                                               b'<p style="font-size:40px; text-align: center">' \
+                 b'<META http-equiv=\"refresh\" content=\"' + \
+                 str(REFRESH_WEB_SECS).encode() + b';URL=/\">' \
+                                                  b'</head>' \
+                                                  b'<body>' \
+                                                  b'<p style="font-size:40px; text-align: center">' \
                  + system_message.encode() + \
                  b'</p>' \
-                 b'<p style="font-size:80px; text-align: center"><a href="/play">Play</a> </p>' \
-                 b'<p style="font-size:80px; text-align: center"><a href="/alarm">Alarm</a> </p>' \
-                 b'<p style="font-size:80px; text-align: center"><a href="/trigger">Trigger</a> </p>' \
-                 b'<p style="font-size:80px; text-align: center"><a href="/stop">Stop</a> </p>' \
-                 b'<p style="font-size:80px; text-align: center"><a href="/vp">[V+]</a>   <a href="/vm">[V-]</a> </p>' \
+                 b'<p style="font-size:40px; text-align: center"><a href="/play">Play</a> </p>' \
+                 b'<p style="font-size:40px; text-align: center"><a href="/alarm">Alarm</a> </p>' \
+                 b'<p style="font-size:40px; text-align: center"><a href="/trigger">Trigger</a> </p>' \
+                 b'<p style="font-size:40px; text-align: center"><a href="/stop">Stop</a> </p>' \
+                 b'<p style="font-size:40px; text-align: center"><a href="/vp">[V+]</a>   <a href="/vm">[V-]</a> </p>' \
                  b'</body>' \
                  b'</html>'
         return b_Html
@@ -179,6 +180,6 @@ class Server:
         return file_list
 
 if __name__ == '__main__':
-    server = Server(ip='127.0.0.1', port=5000)
+    server = Server(ip=None, port=5000)
     print(f'serving address {server.server.server_address}')
     server.start()
