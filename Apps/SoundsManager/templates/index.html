@@ -9,6 +9,7 @@
 <body>
 <h1>Sounds Manager</h1>
 <h2>{{ params['main_message'] }}</h2>
+
 <p></p><a href="/constructions">Constructions</a></p>
 <p></p><a href="/dogs">Dogs</a></p>
 <p></p><a href="/frequencies">Frequencies</a></p>
@@ -51,23 +52,29 @@
                 <input type="range" min="0" max="10" step="1" name="volume_slider"
                        value="{{ params['volume'] }}" onchange="submitVolumeForm()">
             </form>
+            {{ params['volume'] }}
         </th>
     </tr>
     <tr>
-        <th>Duration</th>
+        <th>Trigger<BR>Duration</th>
         <th colspan="2">
             <form action="/duration" method="post" id="durationForm">
                 <input type="range" min="5" max="60" step="5" name="duration_slider"
                        value="{{ params['duration'] }}" onchange="submitDurationForm()">
             </form>
+            {{ params['duration_string'] }}
         </th>
     </tr>
 </table>
 
 
-<h2>{{ params['secondary_message'] }}</h2>
+<h3>{{ params['secondary_message'] }}</h3>
+<div id="clock"></div>
+
 </body>
 </html>
+
+
 <script>
     function submitVolumeForm() {
         document.getElementById("volumeForm").submit();
@@ -77,4 +84,15 @@
         document.getElementById("durationForm").submit();
     }
 
+</script>
+<script>
+    function updateClock() {
+        var now = new Date();
+        var time = now.toLocaleTimeString();
+        document.getElementById('clock').innerHTML = time;
+        // var data = {{ params|tojson  }};
+        // document.getElementById('clock').innerHTML= data['secondary_message']
+    }
+
+    setInterval(updateClock, 100);
 </script>

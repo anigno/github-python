@@ -26,7 +26,7 @@ class WebServerApp:
             'secondary_message': 'Idle'}
         self.selected_sound = SelectedSound.MUSIC
         self.playing_mode = PlayingMode.STOPPED
-        self.volume = 5
+        self.playing_volume = 5
         self.selected_duration = 100
         self.main_thread = threading.Thread(target=self.main_thread_start)
 
@@ -59,9 +59,11 @@ class WebServerApp:
 
     def index(self):
         self.params['secondary_message'] = \
-            f'{self.playing_mode.name} {self.selected_sound.name} [V: {self.volume}] ' \
-            f'[D: {self.seconds_to_time_str(self.selected_duration)}] ' \
+            f'[{self.playing_mode.name}] [{self.selected_sound.name} ' \
             f'[T: {self.seconds_to_time_str(self.triggered_time)}]'
+        self.params['volume'] = self.playing_volume
+        self.params['duration'] = int(math.sqrt(self.selected_duration))
+        self.params['duration_string'] = self.seconds_to_time_str(self.selected_duration)
         return render_template('index.html', params=self.params)
 
     def constructions(self):
@@ -104,8 +106,8 @@ class WebServerApp:
         return self.index()
 
     def volume(self):
-        self.volume = request.form['volume_slider']
-        self.params['volume'] = self.volume
+        self.playing_volume = request.form['volume_slider']
+        self.params['volume'] = self.playing_volume
         return self.index()
 
     def duration(self):

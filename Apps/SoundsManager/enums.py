@@ -1,4 +1,5 @@
 from enum import Enum
+
 class SelectedSound(Enum):
     NONE = 0
     CONSTRUCTION = 1
@@ -10,3 +11,4 @@ class PlayingMode(Enum):
     STOPPED = 0
     PLAYING = 1
     TRIGGERED = 2
+
