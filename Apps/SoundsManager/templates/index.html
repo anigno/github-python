@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="3; url=/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sounds Manager</title>
+</head>
+<body>
+<h1>Sounds Manager</h1>
+<h2>{{ params['main_message'] }}</h2>
+<p></p><a href="/constructions">Constructions</a></p>
+<p></p><a href="/dogs">Dogs</a></p>
+<p></p><a href="/frequencies">Frequencies</a></p>
+<p></p><a href="/music">Music</a></p>
+
+<style>
+    table {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+    }
+</style>
+
+<table>
+    <tr>
+        <th>
+            <form action="/play" method="post">
+                <button type="submit">Play</button>
+            </form>
+        </th>
+        <th>
+            <form action="/stop" method="post">
+                <button type="submit">Stop</button>
+            </form>
+        </th>
+        <th>
+            <form action="/trigger" method="post">
+                <button type="submit">Trigger</button>
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th>Volume</th>
+        <th colspan="2">
+            <form action="/volume" method="post" id="volumeForm">
+                <input type="range" min="0" max="10" step="1" name="volume_slider"
+                       value="{{ params['volume'] }}" onchange="submitVolumeForm()">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th>Duration</th>
+        <th colspan="2">
+            <form action="/duration" method="post" id="durationForm">
+                <input type="range" min="5" max="60" step="5" name="duration_slider"
+                       value="{{ params['duration'] }}" onchange="submitDurationForm()">
+            </form>
+        </th>
+    </tr>
+</table>
+
+
+<h2>{{ params['secondary_message'] }}</h2>
+</body>
+</html>
+<script>
+    function submitVolumeForm() {
+        document.getElementById("volumeForm").submit();
+    }
+
+    function submitDurationForm() {
+        document.getElementById("durationForm").submit();
+    }
+
+</script>

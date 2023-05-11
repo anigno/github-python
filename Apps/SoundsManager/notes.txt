@@ -1,0 +1,29 @@
+description
+    - web server application, runs on a raspberry-pi.
+    - architecture:
+        - Raspbian pi os
+        - no-ip for static like dns service (anignora.ddns.net)
+        - NGINX for transferring port 80 to port 5000
+        - flask app to serve webb request and forward activities to player
+        - pygame for sound playing
+    - play different sounds according to requested operation state and status
+    - triggering playing by web request, from a web browser or from triggering devices
+    - optional:
+        - authentication by web clients
+
+    - user is a web browser client
+    - user can select category of sounds, categories are created automatically by reading sub folders of given root
+    - user can choose playing time from a selection of known intervals
+    - user can trigger playing by clicking on play button
+    - playing sounds are selected randomly from selected category
+    - user / triggering devices sends web request with category to play and duration
+    - application can send web request with triggers to other application
+
+use-cases
+    - user select a category
+    - user select duration
+    - user clicked play
+    - user clicked stop
+    - user changed volume
+    - application received trigger request
+    - user requested restart
