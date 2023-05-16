@@ -1,7 +1,8 @@
 import json
+import random
 import threading
 import time
-
+import random
 from enums import *
 from flask import Flask, render_template, request
 import os
@@ -13,6 +14,7 @@ from pygame import mixer
 class WebServerApp:
     SERVING_ALL_ADDRESSES = '0.0.0.0'
     SERVING_PORT_DEFAULT = 5000
+    SOUNDS_FOLDER = 'sounds'
 
     def __init__(self, serving_ip=SERVING_ALL_ADDRESSES, serving_port=SERVING_PORT_DEFAULT):
         self.serving_ip = serving_ip
@@ -28,10 +30,12 @@ class WebServerApp:
         self.playing_mode = PlayingMode.STOPPED
         self.playing_volume = 5
         self.selected_duration = 100
+        mixer.init()
+        seed(time.time())
         self.main_thread = threading.Thread(target=self.main_thread_start)
 
     def add_rules(self):
-        self.app.add_url_rule("/", view_func=self.index, methods=['POST', 'GET'])
+        self.app.add_url_rule("/", view_func=self.render_index, methods=['POST', 'GET'])
         self.app.add_url_rule("/constructions", view_func=self.constructions, methods=['POST', 'GET'])
         self.app.add_url_rule("/dogs", view_func=self.dogs, methods=['POST', 'GET'])
         self.app.add_url_rule("/frequencies", view_func=self.frequencies, methods=['POST', 'GET'])
@@ -44,7 +48,7 @@ class WebServerApp:
 
     def start(self):
         self.main_thread.start()
-        self.app.run(debug=True, host=self.serving_ip, port=self.serving_port)
+        self.app.run(debug=False, host=self.serving_ip, port=self.serving_port)
 
     def main_thread_start(self):
         while True:
@@ -56,8 +60,12 @@ class WebServerApp:
             if self.playing_mode is PlayingMode.TRIGGERED and self.triggered_time <= 0:
                 with self.app.app_context():
                     self.stop()
+            if self.playing_mode in (PlayingMode.PLAYING, PlayingMode.TRIGGERED):
+                self.ensure_playing()
+            if self.playing_mode is PlayingMode.STOPPED:
+                self.stop_playing()
 
-    def index(self):
+    def render_index(self):
         self.params['secondary_message'] = \
             f'[{self.playing_mode.name}] [{self.selected_sound.name} ' \
             f'[T: {self.seconds_to_time_str(self.triggered_time)}]'
@@ -68,29 +76,29 @@ class WebServerApp:
 
     def constructions(self):
         self.selected_sound = SelectedSound.CONSTRUCTION
-        return self.index()
+        return self.render_index()
 
     def dogs(self):
         self.selected_sound = SelectedSound.DOGS
-        return self.index()
+        return self.render_index()
 
     def frequencies(self):
         self.selected_sound = SelectedSound.FREQUENCIES
-        return self.index()
+        return self.render_index()
 
     def music(self):
         self.selected_sound = SelectedSound.MUSIC
-        return self.index()
+        return self.render_index()
 
     def play(self):
         self.playing_mode = PlayingMode.PLAYING
         self.triggered_time = 0
-        return self.index()
+        return self.render_index()
 
     def stop(self):
         self.playing_mode = PlayingMode.STOPPED
         self.triggered_time = 0
-        return self.index()
+        return self.render_index()
 
     def trigger(self):
         self.playing_mode = PlayingMode.TRIGGERED
@@ -103,17 +111,39 @@ class WebServerApp:
         if trigger_duration:
             self.triggered_time = int(trigger_duration)
 
-        return self.index()
+        return self.render_index()
 
     def volume(self):
         self.playing_volume = request.form['volume_slider']
         self.params['volume'] = self.playing_volume
-        return self.index()
+        mixer.music.set_volume(int(self.playing_volume) / 10)
+        return self.render_index()
 
     def duration(self):
         self.selected_duration = int(math.pow(int(request.form['duration_slider']), 2))
         self.params['duration'] = int(math.sqrt(self.selected_duration))
-        return self.index()
+        return self.render_index()
+
+    def ensure_playing(self):
+        if mixer.music.get_busy():
+            return
+        file = self.get_next_sound_file()
+        mixer.music.load(file)
+        self.params['main_message']=f'playing {file}'
+
+        mixer.music.play()
+
+    def get_next_sound_file(self) -> str:
+        sound_directories = self.get_directories(WebServerApp.SOUNDS_FOLDER)
+        sounds_path = os.path.join(WebServerApp.SOUNDS_FOLDER, self.selected_sound.name).lower()
+        selected_sounds_list = list(sound_directories[sounds_path].keys())
+        next_sound_index = random.randint(0, len(selected_sounds_list)-1)
+        return selected_sounds_list[next_sound_index]
+
+    def stop_playing(self):
+        mixer.music.stop()
+        self.params['main_message']=f'stopped'
+
 
     def get_request_param(self, param_name, is_force_get=True):
         if request.method == 'POST' and not is_force_get:
@@ -143,6 +173,7 @@ class WebServerApp:
         return s
 
 if __name__ == '__main__':
+    os.path.join('a', 'b')
     ws = WebServerApp()
     dirs = ws.get_directories('sounds')
     json_dumps = json.dumps(dirs, indent=4)
