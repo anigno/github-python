@@ -61,7 +61,8 @@ class WebServerApp:
                 with self.app.app_context():
                     self.stop()
             if self.playing_mode in (PlayingMode.PLAYING, PlayingMode.TRIGGERED):
-                self.ensure_playing()
+                with self.app.app_context():
+                    self.ensure_playing()
             if self.playing_mode is PlayingMode.STOPPED:
                 self.stop_playing()
 
@@ -103,7 +104,7 @@ class WebServerApp:
     def trigger(self):
         self.playing_mode = PlayingMode.TRIGGERED
         self.triggered_time = self.selected_duration
-        # get values from request params
+        # get values from request params is passed from other client
         selected_sound_value = self.get_request_param('selected_sound')
         if selected_sound_value:
             self.selected_sound = SelectedSound(int(selected_sound_value))
@@ -129,21 +130,19 @@ class WebServerApp:
             return
         file = self.get_next_sound_file()
         mixer.music.load(file)
-        self.params['main_message']=f'playing {file}'
-
+        self.params['main_message'] = f'playing {file}'
         mixer.music.play()
 
     def get_next_sound_file(self) -> str:
         sound_directories = self.get_directories(WebServerApp.SOUNDS_FOLDER)
         sounds_path = os.path.join(WebServerApp.SOUNDS_FOLDER, self.selected_sound.name).lower()
         selected_sounds_list = list(sound_directories[sounds_path].keys())
-        next_sound_index = random.randint(0, len(selected_sounds_list)-1)
+        next_sound_index = random.randint(0, len(selected_sounds_list) - 1)
         return selected_sounds_list[next_sound_index]
 
     def stop_playing(self):
         mixer.music.stop()
-        self.params['main_message']=f'stopped'
-
+        self.params['main_message'] = f'stopped'
 
     def get_request_param(self, param_name, is_force_get=True):
         if request.method == 'POST' and not is_force_get:
@@ -161,12 +160,6 @@ class WebServerApp:
             else:
                 directories[full_path] = None
         return directories
-
-    def play_random_track(self, folder) -> str:
-        file = self.select_random_file(folder)
-        mixer.music.load(file)
-        mixer.music.play()
-        return file
 
     def seconds_to_time_str(self, seconds) -> str:
         s = f'{seconds // 60}:{seconds % 60:02}'
