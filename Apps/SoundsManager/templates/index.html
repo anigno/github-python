@@ -7,8 +7,8 @@
     <title>Sounds Manager</title>
 </head>
 <body>
-<h1>Sounds Manager V1.1</h1>
-<h2>{{ params['main_message'] }}</h2>
+<h2>Sounds Manager V1.1</h2>
+<h3>{{ params['main_message'] }}</h3>
 
 <p></p><a href="/constructions">Constructions</a></p>
 <p></p><a href="/dogs">Dogs</a></p>
@@ -59,7 +59,7 @@
         <th>Trigger<BR>Duration</th>
         <th colspan="2">
             <form action="/duration" method="post" id="durationForm">
-                <input type="range" min="5" max="60" step="5" name="duration_slider"
+                <input type="range" min="5" max="180" step="5" name="duration_slider"
                        value="{{ params['duration'] }}" onchange="submitDurationForm()">
             </form>
             {{ params['duration_string'] }}
