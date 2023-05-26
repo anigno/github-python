@@ -11,8 +11,8 @@
       "class": "logging.NullHandler"
     },
     "file_system_handler": {
-      "class": "reverse_rotating_file_handler.ReverseRotatingFileHandler",
-      "path": "d:/dev/logs/log",
+      "class": "logging_provider.reverse_rotating_file_handler.ReverseRotatingFileHandler",
+      "path": "d:/dev/logs/datagram/log",
       "prefix": "log.txt",
       "mode": "a",
       "max_bytes": 2097152,
@@ -23,12 +23,6 @@
       "class": "logging.StreamHandler",
       "formatter": "main_format",
       "stream": "ext://sys.stdout"
-    },
-    "datagram_handler": {
-      "class": "logging.handlers.DatagramHandler",
-      "host": "localhost",
-      "port": 9999,
-      "level": "DEBUG"
     }
   },
   "loggers": {
@@ -44,13 +38,6 @@
       "handlers": [
         "stream_handler"
       ]
-    },
-    "datagram_logger": {
-      "handlers": [
-        "datagram_handler",
-        "stream_handler"
-      ],
-      "level": "DEBUG"
     }
   }
 }

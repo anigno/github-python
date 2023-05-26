@@ -10,15 +10,6 @@
     "null": {
       "class": "logging.NullHandler"
     },
-    "file_system_handler": {
-      "class": "reverse_rotating_file_handler.ReverseRotatingFileHandler",
-      "path": "d:/dev/logs/log",
-      "prefix": "log.txt",
-      "mode": "a",
-      "max_bytes": 2097152,
-      "backup_count": 1000,
-      "formatter": "main_format"
-    },
     "stream_handler": {
       "class": "logging.StreamHandler",
       "formatter": "main_format",
@@ -32,13 +23,6 @@
     }
   },
   "loggers": {
-    "file_system_logger": {
-      "level": "DEBUG",
-      "handlers": [
-        "file_system_handler",
-        "stream_handler"
-      ]
-    },
     "stream_only_logger": {
       "level": "DEBUG",
       "handlers": [
