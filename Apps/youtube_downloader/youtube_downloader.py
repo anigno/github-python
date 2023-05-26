@@ -5,14 +5,14 @@ from os import path
 from typing import Optional
 from pytube import YouTube
 
-from logging_provider.logging_initiator import LoggingInitiator
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class YouTubeDownloader:
     def __init__(self):
-        LoggingInitiator()
+        LoggingInitiatorByCode()
         # self.logger = logging.getLogger('main_logger')
-        self.logger = logging.getLogger(LoggingInitiator.STREAM_LOGGER)
-
+        self.logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
+        self.logger.info('YouTubeDownloader started')
         self.args: Optional[argparse.Namespace] = None
         self.youtube_downloader: Optional[YouTube] = None
         self.init_argparse()

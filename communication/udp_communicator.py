@@ -7,10 +7,10 @@ from threading import Thread
 from typing import Optional
 
 from common.generic_event import GenericEvent
-from logging_provider.logging_initiator import LoggingInitiator
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 DataReceivedEventArgs = namedtuple('DataReceivedEventArgs', ['received_data_bytes', 'sender_endpoint_tuple'])
-logger = logging.getLogger(LoggingInitiator.MAIN_LOGGER)
+logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpCommunicator:
     """Sends and receives unicast udp data"""
@@ -60,7 +60,7 @@ class UdpCommunicator:
         self._socket.sendto(byte_array, (target_ip, target_port))
 
 if __name__ == '__main__':
-    LoggingInitiator()
+    LoggingInitiatorByCode()
     com1 = UdpCommunicator("127.0.0.1", 1001)
     com1.on_data_received += lambda p: print(p)
     com1.start_receiving()

@@ -9,9 +9,9 @@ from communication.reliable_udp.reliability_manager import PartitionEventArgs, R
 from communication.reliable_udp.reliable_communicator_config import ReliableCommunicatorConfig
 from communication.reliable_udp.unique_id_provider import UniqueIdProvider
 from communication.udp_communicator import DataReceivedEventArgs, UdpCommunicator
-from logging_provider.logging_initiator import LoggingInitiator
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
-logger = logging.getLogger(LoggingInitiator.MAIN_LOGGER)
+logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class ReliableCommunicator:
 
@@ -50,7 +50,7 @@ class ReliableCommunicator:
         logger.debug(f'message partitions sent: mid={message_id} [{target_ip} {target_port}] nParts={len(partitions)}')
 
 if __name__ == '__main__':
-    LoggingInitiator()  # should be called once per application
+    LoggingInitiatorByCode()  # should be called once per application
     config1 = ReliableCommunicatorConfig('127.0.0.1', 1001)
     pm = PartitionManager(5, 2)
     rm = ReliabilityManager(2, 4)

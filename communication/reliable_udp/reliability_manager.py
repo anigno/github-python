@@ -6,9 +6,9 @@ from threading import RLock, Thread
 from common.generic_event import GenericEvent
 from common.time_utils import TimeUtils
 from communication.reliable_udp.partition import Partition
-from logging_provider.logging_initiator import LoggingInitiator
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
-logger = logging.getLogger(LoggingInitiator.MAIN_LOGGER)
+logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 MessageIdEventArgs = namedtuple('MessageIdEventArgs', ['message_id'])
 PartitionEventArgs = namedtuple('PartitionEventArgs', ['partition'])
 
@@ -92,7 +92,7 @@ class ReliabilityManager:
         return partition.resend_counter <= 0
 
 if __name__ == '__main__':
-    LoggingInitiator()
+    LoggingInitiatorByCode()
     rm = ReliabilityManager(0.1, 0.2)
     parts = [Partition(1000, 0, 2, b'123', '127.0.0.1', 1002, 0, 4),
              Partition(1000, 1, 2, b'123', '127.0.0.1', 1002, 1, 2)]
