@@ -11,9 +11,9 @@ class LoggingInitiatorWithConfig(LoggingInitiatorBase):
 
 if __name__ == '__main__':
     LoggingInitiatorWithConfig('logging_config.json')
-    logger = logging.getLogger(LoggingInitiatorBase.DATAGRAM_LOGGER)
+    logger = logging.getLogger(LoggingInitiatorBase.FILE_SYSTEM_LOGGER)
     for i in range(400):
         level = random.randint(0, 5) * 10
         long_string = '123456789_' * 300
         logger.log(level=level, msg=f'{i} {long_string}')
-        time.sleep(1)
+        time.sleep(.1)
