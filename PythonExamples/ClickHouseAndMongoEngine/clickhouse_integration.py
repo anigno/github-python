@@ -2,6 +2,8 @@ import time
 
 from clickhouse_driver import Client
 
+from PythonExamples.ClickHouseAndMongoEngine.helpers import measure_time
+
 class ClickHouseIntegration:
 
     def __init__(self):
@@ -65,13 +67,15 @@ class ClickHouseIntegration:
         return self.run_query(query)
 
 if __name__ == '__main__':
+
     ch = ClickHouseIntegration()
     client = ch.connect_to_server()
     # ch.create_database('test_database')
     print(ch.get_databases())
-    ch.select_database('test_database')
-    table_name = 'counter_data_map_schema'
+    database_name = 'test_database'
+    ch.select_database(database_name)
     print(ch.get_tables())
+    table_name = 'counter_data_map_schema'
     ch.delete_table(table_name)
     table_create_query = f'''
                 CREATE TABLE {table_name} ( 
@@ -82,16 +86,37 @@ if __name__ == '__main__':
                     vendor String, 
                     market String 
                 ) ENGINE = MergeTree() 
-                ORDER BY (start_time, end_time) 
-                PRIMARY KEY (start_time, end_time) 
+                ORDER BY (start_time,end_time ) 
+                PRIMARY KEY (start_time,end_time) 
                 PARTITION BY market; 
             '''
     ch.create_table(table_create_query)
     print(ch.describe_tabel(table_name))
-    quary = "INSERT INTO counter_data_map_schema (cell_id, start_time, end_time, counter_data, vendor, market) VALUES('cell1','2023-06-18 10:00:00', '2023-06-18 12:00:00', {'counter1': 10.5, 'counter2': 20.7}, 'vendor1','market1')"
-    ch.run_query(quary)
-    print(ch.get_rows(table_name))
-    start=time.time()
-    for a in range(1000):
-        ch.run_query(quary)
-    print(time.time()-start)
+
+    # insert_query = "INSERT INTO counter_data_map_schema (cell_id, start_time, end_time, counter_data, vendor, market) VALUES('cell1','2023-06-18 10:00:00', '2023-06-18 12:00:00', {'counter1': 10.5, 'counter2': 20.7}, 'vendor1','market1')"
+    # ch.run_query(insert_query)
+    # print(ch.get_rows(table_name))
+
+    @measure_time
+    def insert_rows():
+        count = 2000
+        for a in range(count):
+            year = 2000 + a // 100
+            insert_query = f"INSERT INTO counter_data_map_schema (cell_id, start_time, end_time, counter_data, vendor, market) VALUES('cell1','{year}-06-18 10:00:00', '2023-06-18 12:00:00', {{'counter1': 10.5, 'counter2': 20.7}}, 'vendor1','market1')"
+            # print(insert_query)
+            ch.run_query(insert_query)
+
+    @measure_time
+    def read_rows():
+        results = ch.get_rows(table_name)
+        print(f'number of rows: {len(results)}')
+
+    @measure_time
+    def query_rows():
+        query = f"SELECT * FROM {table_name} WHERE start_time>'2010-06-18'"
+        results = ch.run_query(query)
+        print(f'query number of rows: {len(results)}')
+
+    insert_rows()
+    read_rows()
+    query_rows()
