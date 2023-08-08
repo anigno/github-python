@@ -1,0 +1,15 @@
+{
+  "web_site_data": {
+    "url": "https://www.turkhacks.com/forum/sosyal-medya-hacking.184/",
+    "username": "someone136",
+    "email": "jovepi6615@vreaa.com",
+    "password": "aA123456!",
+    "birthdate": "1/1/1971"
+  },
+  "work_manager": {
+    "number_of_workers": 2,
+    "worker_name_prefix": "worker_",
+    "worker_delay": 3.0
+  },
+  "data_folder": "data"
+}

@@ -7,7 +7,7 @@ from typing import Union
 
 class PersisterBase(ABC):
     """
-    low level persistence provider, the way that the files are saved
+    low level data_access provider, the way that the files are saved
     """
 
     def __init__(self, postfix: str, is_debug_mode):
