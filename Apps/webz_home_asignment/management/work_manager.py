@@ -1,7 +1,5 @@
 from typing import Type, Optional
 
-from requests import Session
-
 from Apps.webz_home_asignment.data_access.data_access_json import DataAccessJson
 from Apps.webz_home_asignment.management.waitable_queue import WaitableQueue
 from Apps.webz_home_asignment.workers.crawler_queue_item import CrawlerQueueItem
