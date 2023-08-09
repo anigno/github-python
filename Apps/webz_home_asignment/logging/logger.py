@@ -1,5 +1,5 @@
 import datetime
-from multiprocessing import RLock
+from threading import RLock
 
 class Logger:
     """simple implementation on console log"""

@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 from queue import Queue
 from threading import Thread
 
+from Apps.webz_home_asignment.management.waitable_queue import WaitableQueue
+
 class WorkerBase(ABC):
 
-    def __init__(self, unique_name: str, queue: Queue, worker_delay: float):
-        self.worker_delay = worker_delay
+    def __init__(self, unique_name: str, queue: WaitableQueue):
         self.unique_name = unique_name
         self.is_running = True
         self.queue = queue
