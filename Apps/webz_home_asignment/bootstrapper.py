@@ -14,7 +14,9 @@ class Bootstrapper:
         self.work_manager = WorkManager(self.config_dict['work_manager'], WorkerCrawler)
 
     def run(self):
-        self.work_manager.start(self.config_dict['web_site_data']['url'])
+        url = self.config_dict['web_site_data']['url']
+        login_url = self.config_dict['web_site_data']['login_url']
+        self.work_manager.start(url, login_url)
 
     def stop(self):
         self.work_manager.stop()

@@ -7,6 +7,7 @@ from Apps.webz_home_asignment.logging.logger import Logger
 
 class WaitableQueue:
     """queue implementation of put and get, where the get is limited to time interval"""
+
     def __init__(self, delay: int, max_size=1000):
         self.delay = delay
         self._queue = Queue(max_size)
