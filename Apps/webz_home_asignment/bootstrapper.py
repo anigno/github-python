@@ -1,12 +1,11 @@
 import typer
-from os import path
 from Apps.webz_home_asignment.logging.logger import Logger
 from Apps.webz_home_asignment.management.config_reader import ConfigReader
 from Apps.webz_home_asignment.management.work_manager import WorkManager
 from Apps.webz_home_asignment.workers.worker_crawler import WorkerCrawler
 
 class Bootstrapper:
-    # CONFIG_FILENAME = path.join('configuration', 'app_config.json')
+    """main entry point, handle instance creation of main application components"""
 
     def __init__(self, config_file: str):
         Logger.log('bootstrapper started')
@@ -21,7 +20,6 @@ class Bootstrapper:
         self.work_manager.stop()
 
 if __name__ == '__main__':
-
     def main(config_file: str):
         bootstrapper = Bootstrapper(config_file)
         bootstrapper.run()

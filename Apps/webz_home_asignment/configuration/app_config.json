@@ -9,7 +9,8 @@
   "work_manager": {
     "number_of_workers": 2,
     "worker_name_prefix": "worker_",
-    "worker_delay": 3.0
+    "worker_delay": 3.0,
+    "products_folder": "c:\\temp"
   },
   "data_folder": "data"
 }

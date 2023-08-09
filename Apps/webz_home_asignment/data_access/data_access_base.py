@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 class DataAccessBase(ABC):
+    """base class for data saving"""
     def __init__(self):
         pass
 
@@ -13,5 +14,5 @@ class DataAccessBase(ABC):
         pass
 
     @abstractmethod
-    def save_data(self, data: dict):
+    def save_data(self, prefix: str, data: dict):
         pass
