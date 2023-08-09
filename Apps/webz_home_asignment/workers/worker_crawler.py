@@ -13,11 +13,17 @@ class WorkerCrawler(WorkerBase):
 
     def target_method(self):
         while self.is_running:
-            # time.sleep(random.randint(1000, 2000) / 1000)
             queue_item = self.queue.get()
             self.crawl(queue_item)
 
     def crawl(self, queue_item: CrawlerQueueItem):
         Logger.log(f'{self.unique_name}->crawling url: {queue_item.url}')
 
+"""
+Turk Hacks
+subject list
+general posts
 
+subject
+
+"""
