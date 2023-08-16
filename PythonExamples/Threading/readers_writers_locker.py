@@ -27,3 +27,4 @@ class ReadersWritesLocker:
         self.writer_semaphore.release()
 
 if __name__ == '__main__':
+    pass
