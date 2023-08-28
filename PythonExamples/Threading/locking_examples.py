@@ -6,6 +6,9 @@ def locker():
     locker_rlock = RLock()
     with locker_rlock:
         pass
+    locker_rlock.acquire()
+    locker_rlock.release()
+
     locker_condition = Condition()
     locker_condition.acquire()
     locker_condition.release()

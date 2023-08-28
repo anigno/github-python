@@ -11,14 +11,14 @@ dynamic programming solution
 def calc_fib(n: int):
     if n == 0:
         return 0
-    if n == 1 or n == 2:
+    if n == 1:
         return 1
     return calc_fib(n - 2) + calc_fib(n - 1)
 
 def calc_fib_dynamic(n: int, storage_dict: dict):
     if n == 0:
         return 0
-    if n == 1 or n == 2:
+    if n == 1:
         return 1
     # check if already calculated n-1 to retrieve from storage
     if (n - 1) not in storage_dict:

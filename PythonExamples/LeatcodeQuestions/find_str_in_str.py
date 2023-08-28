@@ -14,6 +14,8 @@ def find_str_in_str(source: str, target: str) -> int:
         sc = 0
     return -1
 
+
+
 if __name__ == '__main__':
     print(find_str_in_str('ABC', 'AABCC'))
     print(find_str_in_str('ABC', 'AABACC'))
