@@ -33,7 +33,7 @@ class WebServerApp:
         mixer.init()
         mixer.music.set_volume(0.5)
         seed(time.time())
-        self.main_thread = threading.Thread(target=self.main_thread_start)
+        self.main_thread = threading.Thread(target=self.main_thread_start,daemon=True)
 
     def add_rules(self):
         self.app.add_url_rule("/", view_func=self.render_index, methods=['POST', 'GET'])
