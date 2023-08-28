@@ -5,7 +5,9 @@ class SelectedSound(Enum):
     CONSTRUCTION = 1
     DOGS = 2
     FREQUENCIES = 3
-    MUSIC = 4
+    MUSIC1 = 4
+    MUSIC2 = 5
+    MUSIC3 = 6
 
 class PlayingMode(Enum):
     STOPPED = 0

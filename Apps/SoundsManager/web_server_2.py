@@ -26,11 +26,12 @@ class WebServerApp:
         self.params = {
             'main_message': 'hello from web server',
             'secondary_message': 'Idle'}
-        self.selected_sound = SelectedSound.MUSIC
+        self.selected_sound = SelectedSound.MUSIC1
         self.playing_mode = PlayingMode.STOPPED
         self.playing_volume = 5
         self.selected_duration = 100
         mixer.init()
+        mixer.music.set_volume(0.5)
         seed(time.time())
         self.main_thread = threading.Thread(target=self.main_thread_start)
 
@@ -39,7 +40,9 @@ class WebServerApp:
         self.app.add_url_rule("/constructions", view_func=self.constructions, methods=['POST', 'GET'])
         self.app.add_url_rule("/dogs", view_func=self.dogs, methods=['POST', 'GET'])
         self.app.add_url_rule("/frequencies", view_func=self.frequencies, methods=['POST', 'GET'])
-        self.app.add_url_rule("/music", view_func=self.music, methods=['POST', 'GET'])
+        self.app.add_url_rule("/music1", view_func=self.music, methods=['POST', 'GET'])
+        self.app.add_url_rule("/music2", view_func=self.music2, methods=['POST', 'GET'])
+        self.app.add_url_rule("/music3", view_func=self.music3, methods=['POST', 'GET'])
         self.app.add_url_rule("/play", view_func=self.play, methods=['POST', 'GET'])
         self.app.add_url_rule("/stop", view_func=self.stop, methods=['POST', 'GET'])
         self.app.add_url_rule("/trigger", view_func=self.trigger, methods=['POST', 'GET'])
@@ -88,7 +91,15 @@ class WebServerApp:
         return self.render_index()
 
     def music(self):
-        self.selected_sound = SelectedSound.MUSIC
+        self.selected_sound = SelectedSound.MUSIC1
+        return self.render_index()
+
+    def music2(self):
+        self.selected_sound = SelectedSound.MUSIC2
+        return self.render_index()
+
+    def music3(self):
+        self.selected_sound = SelectedSound.MUSIC3
         return self.render_index()
 
     def play(self):
