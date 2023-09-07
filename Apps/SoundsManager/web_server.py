@@ -1,15 +1,16 @@
 import json
+import logging
+import math
+import os
 import random
 import threading
 import time
-import random
-from enums import *
+from random import seed
 from flask import Flask, render_template, request
-import os
-import math
-from random import randint, seed
-from threading import Thread
 from pygame import mixer
+from enums import *
+from logging_provider.logging_initiator_base import LoggingInitiatorBase
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class WebServerApp:
     SERVING_ALL_ADDRESSES = '0.0.0.0'
@@ -19,6 +20,9 @@ class WebServerApp:
     def __init__(self, serving_ip=SERVING_ALL_ADDRESSES, serving_port=SERVING_PORT_DEFAULT):
         self.serving_ip = serving_ip
         self.serving_port = serving_port
+        LoggingInitiatorByCode('logs')
+        self.logger = logging.getLogger(LoggingInitiatorBase.FILE_SYSTEM_LOGGER)
+        self.logger.info('App started')
         self.app = Flask('SoundsManager')
         self.add_rules()
         self.counter = 0
@@ -33,7 +37,7 @@ class WebServerApp:
         mixer.init()
         mixer.music.set_volume(0.5)
         seed(time.time())
-        self.main_thread = threading.Thread(target=self.main_thread_start,daemon=True)
+        self.main_thread = threading.Thread(target=self.main_thread_start, daemon=True)
 
     def add_rules(self):
         self.app.add_url_rule("/", view_func=self.render_index, methods=['POST', 'GET'])
@@ -63,11 +67,15 @@ class WebServerApp:
             if self.playing_mode is PlayingMode.TRIGGERED and self.triggered_time <= 0:
                 with self.app.app_context():
                     self.stop()
+                    self.logger.info('trigger stop')
+
             if self.playing_mode in (PlayingMode.PLAYING, PlayingMode.TRIGGERED):
                 with self.app.app_context():
                     self.ensure_playing()
             if self.playing_mode is PlayingMode.STOPPED:
                 self.stop_playing()
+                self.playing_mode = PlayingMode.IDLE
+                self.logger.info('stopped playing')
 
     def render_index(self):
         self.params['secondary_message'] = \
@@ -137,12 +145,17 @@ class WebServerApp:
         return self.render_index()
 
     def ensure_playing(self):
-        if mixer.music.get_busy():
-            return
-        file = self.get_next_sound_file()
-        mixer.music.load(file)
-        self.params['main_message'] = f'playing {file}'
-        mixer.music.play()
+        try:
+            if mixer.music.get_busy():
+                return
+            file = self.get_next_sound_file()
+            mixer.music.load(file)
+            self.params['main_message'] = f'playing {file}'
+            mixer.music.play()
+        except Exception as ex:
+            self.logger.exception(ex)
+        finally:
+            pass
 
     def get_next_sound_file(self) -> str:
         sound_directories = self.get_directories(WebServerApp.SOUNDS_FOLDER)

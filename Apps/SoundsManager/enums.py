@@ -13,4 +13,5 @@ class PlayingMode(Enum):
     STOPPED = 0
     PLAYING = 1
     TRIGGERED = 2
+    IDLE = 3
 
