@@ -1,2 +1,0 @@
-* pydev debugger: CRITICAL WARNING: This version of python seems to be incorrectly compiled
-add to interpreter options in run/debug options: -Xfrozen_modules=off

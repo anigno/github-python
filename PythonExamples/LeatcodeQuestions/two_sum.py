@@ -2,6 +2,7 @@ from typing import List
 
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
+        """find two indexes of numbers that sum target"""
         nums2 = nums.copy()
         nums.sort()
         a = 0
