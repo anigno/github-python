@@ -15,28 +15,26 @@ class TreeNode:
 class BinaryTree:
     root: TreeNode = None
 
-    def insert(self, value) -> TreeNode:
+    def insert(self, value, node: TreeNode = None) -> TreeNode:
         if not self.root:
             self.root = TreeNode(value)
             return self.root
-        return BinaryTree._insert_recurse(self.root, value)
-
-    @staticmethod
-    def _insert_recurse(node: TreeNode, value) -> TreeNode:
+        if not node:
+            node = self.root
         if value < node.value:
             if node.left:
-                return BinaryTree._insert_recurse(node.left, value)
+                return self.insert(value, node.left)
             else:
                 node.left = TreeNode(value)
                 return node.left
         else:
             if node.right:
-                return BinaryTree._insert_recurse(node.right, value)
+                return self.insert(value, node.right)
             else:
                 node.right = TreeNode(value)
                 return node.right
 
-    def get_bfs_generator(self) -> Iterable[TreeNode]:
+    def get_bfs(self) -> Iterable[TreeNode]:
         nodes_queue = Queue()
         nodes_queue.put(self.root)
         while not nodes_queue.empty():
@@ -47,45 +45,43 @@ class BinaryTree:
             if node.right:
                 nodes_queue.put(node.right)
 
-    def get_dfs_generator(self) -> Iterable[TreeNode]:
-        for node in self._dfs_recurse(self.root):
-            yield node
-
-    def _dfs_recurse(self, node: TreeNode) -> Iterable[TreeNode]:
-        yield node
-        if node.left:
-            yield from self._dfs_recurse(node.left)
-        if node.right:
-            yield from self._dfs_recurse(node.right)
-
-    def print_sorted(self, node: TreeNode = None):
+    def get_dfs(self, node: TreeNode = None) -> Iterable[TreeNode]:
         if not node:
             node = self.root
-        # if leaf
-        if not node.left and not node.right:
-            print(node,end='')
-            return
+        yield node
+        if node.left:
+            yield from self.get_dfs(node.left)
+        if node.right:
+            yield from self.get_dfs(node.right)
+
+    def get_sorted(self, node: TreeNode = None) -> Iterable[TreeNode]:
+        if not node:
+            node = self.root
         # if it has left branch
         if node.left:
-            self.print_sorted(node.left)
-            print(node,end='')
-        else:
-            print(node,end='')
+            yield from self.get_sorted(node.left)
+        yield node
         # if it has right branch
         if node.right:
-            self.print_sorted(node.right)
+            yield from self.get_sorted(node.right)
 
 if __name__ == '__main__':
+    """
+        5
+      3   7
+     2 4 6 8
+    1       9
+    """
     bt = BinaryTree()
     for a in [5, 3, 4, 2, 7, 8, 6, 9, 1]:
         n = bt.insert(a)
-        print(f'inserted {n}',end='')
+        print(n, end='')
     print('\nBFS')
-    for n in bt.get_bfs_generator():
-        print(n,end='')
+    for n in bt.get_bfs():
+        print(n, end='')
     print('\nDFS')
-    for n in bt.get_dfs_generator():
-        print(n,end='')
+    for n in bt.get_dfs():
+        print(n, end='')
     print('\nsorted')
-    bt.print_sorted()
-    print()
+    for n in bt.get_sorted():
+        print(n, end='')
