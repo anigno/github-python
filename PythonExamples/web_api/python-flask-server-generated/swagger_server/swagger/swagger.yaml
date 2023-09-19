@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: Passenger API
+  version: 1.0.0
+servers:
+- url: http://192.168.212.20:8080
+- url: http://127.0.0.1:8080
+paths:
+  /histogram:
+    get:
+      summary: Get Histogram
+      description: Retrieve a histogram of passenger data.
+      operationId: histogram_get
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              example: |
+                {
+                  "histogram": [
+                    {"range": "0-20", "count": 10},
+                    {"range": "21-40", "count": 25},
+                    {"range": "41-60", "count": 15}
+                  ]
+                }
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /passengers/{id}:
+    get:
+      summary: Get Passenger Data by ID
+      description: Retrieve passenger data by ID with specific attributes.
+      operationId: passengers_id_get
+      parameters:
+      - name: id
+        in: path
+        description: ID of the passenger to retrieve.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: attributes
+        in: query
+        description: Comma-separated list of attributes to include in the response.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              example: |
+                {
+                  "id": 123,
+                  "name": "John Doe",
+                  "age": 35
+                }
+        "404":
+          description: Passenger not found
+          content:
+            application/json:
+              example: |
+                {
+                  "error": "Passenger not found"
+                }
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /passengers:
+    get:
+      summary: Get All Passengers
+      description: Retrieve a list of all passengers.
+      operationId: passengers_get
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              example: |
+                [
+                  {
+                    "id": 123,
+                    "name": "John Doe",
+                    "age": 35,
+                    "destination": "New York"
+                  },
+                  {
+                    "id": 124,
+                    "name": "Jane Smith",
+                    "age": 28,
+                    "destination": "Los Angeles"
+                  }
+                  // Add more passenger objects as needed
+                ]
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components: {}
+

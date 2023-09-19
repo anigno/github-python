@@ -15,18 +15,21 @@ shopping_cart = {}
 def get_products():
     return jsonify(products)
 
+"""in postman,[http://127.0.0.1:5000/add-to-cart/12345] set message to POST, add 'Content-Type' header to 'application/json' and in body add:
+ {"quantity":3} or just {} as raw"""
+
 @app.route('/add-to-cart/<product_id>', methods=['POST'])
 def add_to_cart(product_id):
     if product_id not in products:
         return jsonify({'error': 'Product not found'}), 404
-
     quantity = request.json.get('quantity', 1)
     if product_id in shopping_cart:
         shopping_cart[product_id] += quantity
     else:
         shopping_cart[product_id] = quantity
+    return jsonify({'message': f'Product added to cart currently in cart: {shopping_cart[product_id]}'}), 200
 
-    return jsonify({'message': 'Product added to cart'}), 200
+"""[http://127.0.0.1:5000/cart]"""
 
 @app.route('/cart', methods=['GET'])
 def view_cart():
