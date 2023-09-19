@@ -1,5 +1,5 @@
 def calc_products(nums: list[int]) -> list[int]:
-    """calc products of each num in nums without its value"""
+    """calc products of each num in nums without its value without using '/' """
     # build lists of products from left  and right
     length = len(nums)
     products_right = [1] * length

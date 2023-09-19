@@ -36,14 +36,15 @@ class BinaryTree:
 
     def get_bfs(self) -> Iterable[TreeNode]:
         nodes_queue = Queue()
-        nodes_queue.put(self.root)
+        layer = 0
+        nodes_queue.put((self.root, layer))
         while not nodes_queue.empty():
-            node = nodes_queue.get()
-            yield node
+            node, layer = nodes_queue.get()
+            yield node, layer
             if node.left:
-                nodes_queue.put(node.left)
+                nodes_queue.put((node.left, layer + 1))
             if node.right:
-                nodes_queue.put(node.right)
+                nodes_queue.put((node.right, layer + 1))
 
     def get_dfs(self, node: TreeNode = None) -> Iterable[TreeNode]:
         if not node:
@@ -78,7 +79,7 @@ if __name__ == '__main__':
         print(n, end='')
     print('\nBFS')
     for n in bt.get_bfs():
-        print(n, end='')
+        print(f'{n[0]}{n[1]} ', end='')
     print('\nDFS')
     for n in bt.get_dfs():
         print(n, end='')
