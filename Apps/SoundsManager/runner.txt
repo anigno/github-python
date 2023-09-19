@@ -1,0 +1,3 @@
+run from command line:
+cd D:\DEV\GIT\github-python
+C:\Python311\python.exe D:\DEV\GIT\github-python\Apps\SoundsManager\runner.py
