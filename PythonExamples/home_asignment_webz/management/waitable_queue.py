@@ -3,7 +3,7 @@ import time
 from queue import Queue
 from threading import RLock, Thread
 
-from Apps.webz_home_asignment.logging.logger import Logger
+from PythonExamples.home_asignment_webz.logging.logger import Logger
 
 class WaitableQueue:
     """queue implementation of put and get, where the get is limited to time interval"""

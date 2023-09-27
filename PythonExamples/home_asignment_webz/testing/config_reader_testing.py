@@ -2,7 +2,7 @@ import json
 import os
 import unittest
 
-from Apps.webz_home_asignment.management.config_reader import ConfigReader
+from PythonExamples.home_asignment_webz.management.config_reader import ConfigReader
 
 class ConfigReaderTesting(unittest.TestCase):
     def setUp(self):

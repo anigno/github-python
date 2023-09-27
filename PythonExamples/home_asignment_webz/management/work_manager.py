@@ -1,9 +1,9 @@
 from typing import Type, Optional
 
-from Apps.webz_home_asignment.data_access.data_access_json import DataAccessJson
-from Apps.webz_home_asignment.management.waitable_queue import WaitableQueue
-from Apps.webz_home_asignment.workers.crawler_queue_item import CrawlerQueueItem
-from Apps.webz_home_asignment.workers.worker_base import WorkerBase
+from PythonExamples.home_asignment_webz.data_access.data_access_json import DataAccessJson
+from PythonExamples.home_asignment_webz.management.waitable_queue import WaitableQueue
+from PythonExamples.home_asignment_webz.workers.crawler_queue_item import CrawlerQueueItem
+from PythonExamples.home_asignment_webz.workers.worker_base import WorkerBase
 
 class WorkManager:
     """creates and manage working threads implemented as workers"""

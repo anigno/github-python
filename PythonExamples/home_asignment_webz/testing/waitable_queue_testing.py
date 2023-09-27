@@ -1,8 +1,8 @@
 import unittest
 from threading import Thread
 
-from Apps.webz_home_asignment.logging.logger import Logger
-from Apps.webz_home_asignment.management.waitable_queue import WaitableQueue
+from PythonExamples.home_asignment_webz.logging.logger import Logger
+from PythonExamples.home_asignment_webz.management.waitable_queue import WaitableQueue
 
 class WaitableQueueTesting(unittest.TestCase):
 

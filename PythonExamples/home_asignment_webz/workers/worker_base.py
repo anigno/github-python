@@ -4,9 +4,9 @@ from typing import Optional
 
 from requests import Session
 
-from Apps.webz_home_asignment.data_access.data_access_base import DataAccessBase
-from Apps.webz_home_asignment.management.history_dictionary import HistoryDictionary
-from Apps.webz_home_asignment.management.waitable_queue import WaitableQueue
+from PythonExamples.home_asignment_webz.data_access.data_access_base import DataAccessBase
+from PythonExamples.home_asignment_webz.management.history_dictionary import HistoryDictionary
+from PythonExamples.home_asignment_webz.management.waitable_queue import WaitableQueue
 
 class WorkerBase(ABC):
     """base class for a worker, with target method run in a WorkManager's managed threads"""

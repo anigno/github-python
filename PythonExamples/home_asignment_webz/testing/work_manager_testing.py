@@ -1,7 +1,7 @@
 import unittest
 
-from Apps.webz_home_asignment.management.work_manager import WorkManager
-from Apps.webz_home_asignment.workers.worker_base import WorkerBase
+from PythonExamples.home_asignment_webz.management.work_manager import WorkManager
+from PythonExamples.home_asignment_webz.workers.worker_base import WorkerBase
 
 class WorkManagerTesting(unittest.TestCase):
 

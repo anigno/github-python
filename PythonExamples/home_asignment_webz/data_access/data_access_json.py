@@ -2,7 +2,7 @@ import json
 from os import path
 from threading import RLock
 
-from Apps.webz_home_asignment.data_access.data_access_base import DataAccessBase
+from PythonExamples.home_asignment_webz.data_access.data_access_base import DataAccessBase
 
 class DataAccessJson(DataAccessBase):
     """saving structured data in json files"""

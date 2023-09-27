@@ -1,8 +1,8 @@
 import typer
-from Apps.webz_home_asignment.logging.logger import Logger
-from Apps.webz_home_asignment.management.config_reader import ConfigReader
-from Apps.webz_home_asignment.management.work_manager import WorkManager
-from Apps.webz_home_asignment.workers.worker_crawler import WorkerCrawler
+from PythonExamples.home_asignment_webz.logging.logger import Logger
+from PythonExamples.home_asignment_webz.management.config_reader import ConfigReader
+from PythonExamples.home_asignment_webz.management.work_manager import WorkManager
+from PythonExamples.home_asignment_webz.workers.worker_crawler import WorkerCrawler
 
 class Bootstrapper:
     """main entry point, handle instance creation of main application components"""
