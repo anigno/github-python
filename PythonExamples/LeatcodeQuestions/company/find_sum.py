@@ -40,7 +40,8 @@ if __name__ == '__main__':
     s = Solution()
     print(s.find_sum_numbers([3, 1, 2, 5, 4, 3], 6))
     print(s.find_sum_numbers([1, 1, 1, 2, 3], 3))
-
+    print(s.find_sum_numbers([1, 3, 3, 4], 6))
+    print()
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 6))
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 7))
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 4))
@@ -49,3 +50,4 @@ if __name__ == '__main__':
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 8))
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 3))
     print(s.find_sum_indexes([3, 1, 2, 5, 4, 3], 1))
+    print(s.find_sum_indexes([1, 3, 3, 4], 6))
