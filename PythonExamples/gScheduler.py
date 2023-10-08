@@ -1,28 +1,28 @@
+import greenlet
+
+def foo():
+    print("Foo 1")
+    gr2.switch()
+    print("Foo 2")
+    gr2.switch()
+    print("Foo 3")
+
+def bar():
+    print("Bar 1")
+    gr1.switch()
+    print("Bar 2")
+    gr1.switch()
+
+# Create two greenlets
+gr1 = greenlet.greenlet(foo)
+gr2 = greenlet.greenlet(bar)
+
+# Start execution of the first greenlet
+gr1.switch()
+
 """
-greenlets scheduling
+Bar 1
+Foo 2
+Bar 2
+Foo 3
 """
-import asyncio
-import threading
-
-from gevent import greenlet
-from gevent.queue import Queue
-
-_periodic_run_loop = asyncio.get_event_loop()
-
-
-def schedulerFunction():
-    gMain = greenlet.greenlet(run=test1)
-    pass
-
-
-thread = threading.Thread(target=schedulerFunction)
-
-
-def start() -> threading.Thread:
-    thread.start()
-    return thread
-
-
-def add_task(task, priority):
-
-    pass
