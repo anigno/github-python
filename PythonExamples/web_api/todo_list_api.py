@@ -20,6 +20,7 @@ def create_todo():
     return jsonify({'message': 'Todo created successfully', 'todo': new_todo}), 201
 
 # Route to get all todos
+@app.route('/', methods=['GET'])
 @app.route('/todos', methods=['GET'])
 def get_todos():
     return jsonify({'todos': todo_list})
@@ -63,3 +64,4 @@ def delete_todo(todo_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
