@@ -2,7 +2,9 @@ from typing import List
 
 class Solution:
     def find_sum_numbers(self, nums: List[int], target: int) -> tuple[int, int]:
-        """find two numbers in nums that sum target O(nlog(n))"""
+        """find two numbers in nums that sum target O(nlog(n))
+        sort the list, take first and last numbers, if the sum greater than target move last to previous one,
+        if sum smaller than target take next to first. until you find target"""
         nums.sort()
         left = 0
         right = len(nums) - 1
@@ -16,7 +18,8 @@ class Solution:
                 return nums[left], nums[right]
 
     def find_sum_indexes(self, nums: List[int], target: int) -> tuple[int, int]:
-        """return indexes og found numbers O(n)"""
+        """return indexes og found numbers O(n),
+        put nums in dict where key is the index. look for target-d[i] in dict"""
         pos_dict = {}
         # build dict by nums:[indexes]
         for i, num in enumerate(nums):

@@ -2,26 +2,27 @@ from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        """buy and sell many times"""
+        """buy and sell many times, gather profits. as long as profit increases, move sell to next,
+        else start new buy and sell lookup"""
         profit_sum = 0
         left = 0
         right = 1
-        cp = 0
+        current_price = 0
         while right < len(prices):
-            cp = prices[right] - prices[left]
-            if cp < 0:
+            current_price = prices[right] - prices[left]
+            if current_price < 0:
                 left = right
-                right = left + 1
+                right += 1
             elif right < len(prices) - 1 and prices[right + 1] < prices[right]:
-                cp = prices[right] - prices[left]
-                profit_sum += cp
-                print(f' {cp} {profit_sum}')
+                current_price = prices[right] - prices[left]
+                profit_sum += current_price
+                print(f' {current_price} {profit_sum}')
                 left = right
                 right = left + 1
-                cp = 0
+                current_price = 0
             else:
                 right += 1
-        profit_sum += max(cp, 0)
+        profit_sum += max(current_price, 0)
         return profit_sum
 
 # 241

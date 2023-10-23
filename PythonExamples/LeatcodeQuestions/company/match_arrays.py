@@ -2,9 +2,10 @@ from typing import Dict
 
 class Solution:
     def match_arrays(self, array1: str, array2: str) -> bool:
-        """match exactly all chars in array1 and array2"""
+        """match exactly all chars in array1 and array2,
+        add array1 to dict, count chars. check array2 chars, decrease chars count removing count==0 chars.
+        check for empty dict"""
         # if not array1 or not array2:
-
         if len(array1) != len(array2):
             return False
         counter_dict: Dict[str, int] = {}

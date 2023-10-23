@@ -2,7 +2,8 @@ from typing import List
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        """find best profit buy and sell"""
+        """find best profit buy and sell once, check each buy index as long as there is a profit.
+        if no profit , move to index after the no profit found index"""
         maxp = 0
         left_buy = 0
         right_sell = 1

@@ -31,6 +31,7 @@ class LinkedList:
         return s_ret + 'N'
 
 def find_connected_node(linked1: LinkedList, linked2: LinkedList) -> Optional[LinkedNode]:
+    """create dict from first list, and look for a node from second list in the dict"""
     d = {}
     node = linked1.head
     while node:

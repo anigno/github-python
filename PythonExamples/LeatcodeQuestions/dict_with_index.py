@@ -1,4 +1,6 @@
 class DictWithIndex:
+    """dict that items has a key and an index,
+    maintain a list of indexes to keys mapping"""
     dict_store = {}
     list_index_key = []
     dict_key_to_index = {}

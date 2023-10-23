@@ -1,5 +1,6 @@
-# verify all chars counts in source are in target counted
 def is_chars_in_str(source: str, target: str):
+    """verify all chars counts in source are in target counted,
+    add target counts to dict, check source chars by decreasing counts from dict"""
     target_counters = {}
     for c in target:
         if c not in target_counters:

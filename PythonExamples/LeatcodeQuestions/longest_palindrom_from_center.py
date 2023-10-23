@@ -1,4 +1,5 @@
 class Solution:
+    """find palindromes, best to look from center to sides. (two possibilities: abba or aba)"""
 
     def longestPalindromeFromCenter(self, s: str) -> str:
         """from any char pos n in s try to expend in both directions (n,n+1 as center is possible)"""

@@ -1,11 +1,15 @@
 from typing import List
 
 def find_missing_number(arry: List[int]) -> int:
+    """find missing number in array,
+    calc sum of linear seria of n+1, and sum of array. result is the diff"""
     sum1 = sum(arry)
     sum2 = sum(range(len(arry) + 2))
     return sum2 - sum1
 
 def find_missing_two_numbers(arry: List[int]) -> list:
+    """find two missing numbers in array,
+    add to dict and look for all numbers"""
     d = {}
     ret = []
     for a in arry:

@@ -2,6 +2,7 @@ import random
 from typing import List
 
 def iterate_unique(nums: List[int]):
+    """iterate only unique (first appearance) numbers"""
     unique_dict = {}
     for a in nums:
         if a not in unique_dict:

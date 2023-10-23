@@ -1,7 +1,10 @@
 from typing import List
 
 def can_jump(nums: List[int]) -> bool:
-    """each number represent the jump distance, find if able to reach to end to nums"""
+    """each number represent the jump distance, find if able to reach to end to nums,
+    e.g.
+    3,3,0,0,4 - can jump 3 from [0] or left with 2 from [1], but [1] is 3, so can jump 3 from [1],
+    check remaining jumps with old value compare to new jump value and take larger to continue"""
     if len(nums) < 2:
         return True
     a = 0
@@ -14,6 +17,7 @@ def can_jump(nums: List[int]) -> bool:
     return False
 
 if __name__ == '__main__':
+    print(can_jump([3, 3, 0, 0, 4]))
     print(can_jump([2, 3, 1, 1, 4]))
     print(can_jump([3, 2, 1, 0, 4]))
     print(can_jump([3, 0, 0, 0, 1, 4]))
