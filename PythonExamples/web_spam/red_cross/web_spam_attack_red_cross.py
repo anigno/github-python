@@ -1,9 +1,10 @@
 import random
 from threading import Thread
-
 import requests
 
 from PythonExamples.web_spam.red_cross.data import Data
+
+# https://www.icrc.org/en/contact/
 
 cookies = {
     'ICRCAppGwAffinityCORS': 'a1d09764a05c45e4f6c1968a400f8ea6',
@@ -30,8 +31,6 @@ headers = {
     'upgrade-insecure-requests': '1',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0',
 }
-
-
 
 message_red_cross = []
 message_red_cross.append(
@@ -75,7 +74,7 @@ if __name__ == '__main__':
             # print(data)
             response = requests.post('https://www.icrc.org/en/contact/', cookies=cookies, headers=headers, data=data)
             print(f"{a} {data['name']} response{response}")
-            print('-------------------------------------------------------------')
+            # print('-------------------------------------------------------------')
 
     for _ in range(10):
         t = Thread(target=func, daemon=True)
