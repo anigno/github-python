@@ -15,7 +15,7 @@ class Airplane:
         self.location.y += math.sin(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval_sec
         self.location.h += math.sin(self.direction.elevation) * self.velocity * interval_sec
 
-    def calculate_Direction(self, location: Location3d) -> Direction3d:
+    def calculate_Direction_to(self, location: Location3d) -> Direction3d:
         delta_x = location.x - self.location.x
         delta_y = location.y - self.location.y
         delta_z = location.h - self.location.h
@@ -23,6 +23,10 @@ class Airplane:
         horizontal_distance = math.sqrt(delta_x ** 2 + delta_y ** 2)
         elevation = math.atan2(delta_z, horizontal_distance)
         return Direction3d(azimuth, elevation)
+
+    def calculate_distance_to(self, location: Location3d) -> float:
+        distance = math.sqrt((location.x - self.location.x) ** 2 + (location.y - self.location.y) ** 2 + (location.h - self.location.h) ** 2)
+        return distance
 
     def __str__(self):
         str_list = []
@@ -79,23 +83,37 @@ if __name__ == '__main__':
     def test_calculate_direction():
         a = Airplane('1 plane1', Location3d(0.0, 0.0, 0.0), Direction3d(0.0, 0.0), velocity=1.0)
         print(a)
-        location = a.calculate_Direction(Location3d(100, 100, 0))
+        location = a.calculate_Direction_to(Location3d(100, 100, 0))
         print(location)
         assert abs(location.azimuth_degree - 45) < epsilon
-        location = a.calculate_Direction(Location3d(-100, -100, 0))
+        location = a.calculate_Direction_to(Location3d(-100, -100, 0))
         print(location)
         assert abs(location.azimuth_degree - (-135)) < epsilon
-        location = a.calculate_Direction(Location3d(0, 0, 100))
+        location = a.calculate_Direction_to(Location3d(0, 0, 100))
         print(location)
         assert abs(location.elevation_degree - 90) < epsilon
-        location = a.calculate_Direction(Location3d(100, 0, 100))
+        location = a.calculate_Direction_to(Location3d(100, 0, 100))
         print(location)
         assert abs(location.elevation_degree - 45) < epsilon
-        location = a.calculate_Direction(Location3d(100, 100, math.sqrt(100 ** 2 + 100 ** 2)))
+        location = a.calculate_Direction_to(Location3d(100, 100, math.sqrt(100 ** 2 + 100 ** 2)))
         print(location)
-        location = a.calculate_Direction(Location3d(100, 100, 100))
+        location = a.calculate_Direction_to(Location3d(100, 100, 100))
         print(location)
         assert abs(location.elevation_degree - 35.26) < epsilon
 
+    def test_distance():
+        a = Airplane('1 plane1', Location3d(0.0, 0.0, 0.0), Direction3d(0.0, 0.0), velocity=1.0)
+        print(a)
+        distance = a.calculate_distance_to(Location3d(100, 0, 0))
+        print(distance)
+        assert abs(distance - 100) < epsilon
+        distance = a.calculate_distance_to(Location3d(100, 100, 0))
+        print(distance)
+        assert abs(distance - 141.42) < epsilon
+        distance = a.calculate_distance_to(Location3d(100, 100, 100))
+        print(distance)
+        assert abs(distance - 173.20) < epsilon
+
     test_move()
     test_calculate_direction()
+    test_distance()
