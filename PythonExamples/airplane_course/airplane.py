@@ -10,10 +10,10 @@ class Airplane:
         self.direction = direction
         self.velocity = velocity
 
-    def move(self, interval_sec):
-        self.location.x += math.cos(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval_sec
-        self.location.y += math.sin(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval_sec
-        self.location.h += math.sin(self.direction.elevation) * self.velocity * interval_sec
+    def move(self, interval):
+        self.location.x += math.cos(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval
+        self.location.y += math.sin(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval
+        self.location.h += math.sin(self.direction.elevation) * self.velocity * interval
 
     def calculate_Direction_to(self, location: Location3d) -> Direction3d:
         delta_x = location.x - self.location.x
@@ -28,6 +28,10 @@ class Airplane:
         distance = math.sqrt((location.x - self.location.x) ** 2 + (location.y - self.location.y) ** 2 + (location.h - self.location.h) ** 2)
         return distance
 
+    def move_to(self, location: Location3d, interval: float):
+        self.direction = self.calculate_Direction_to(location)
+        self.move(interval)
+
     def __str__(self):
         str_list = []
         for v in self.__dict__:
@@ -35,8 +39,6 @@ class Airplane:
         return "".join(str_list)
 
 if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-
     epsilon = 0.01
 
     def test_move():
@@ -114,6 +116,15 @@ if __name__ == '__main__':
         print(distance)
         assert abs(distance - 173.20) < epsilon
 
+    def test_move_to():
+        a = Airplane('1 plane1', Location3d(0.0, 0.0, 0.0), Direction3d(0.0, 0.0), velocity=1.0)
+        a.move_to(Location3d(100, 100, 100), 173.21)
+        print(a)
+        assert abs(a.location.x - 100) < epsilon
+        assert abs(a.location.y - 100) < epsilon
+        assert abs(a.location.h - 100) < epsilon
+
     test_move()
     test_calculate_direction()
     test_distance()
+    test_move_to()
