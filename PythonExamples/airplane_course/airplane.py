@@ -4,11 +4,12 @@ from PythonExamples.airplane_course.Location3d import Location3d
 from PythonExamples.airplane_course.direction3d import Direction3d
 
 class Airplane:
-    def __init__(self, name: str, location: Location3d, direction: Direction3d, velocity=0.0):
+    def __init__(self, name: str, location: Location3d, direction: Direction3d, velocity=0.0,max_rotation_change=0.35):
         self.name = name
         self.location = location
         self.direction = direction
         self.velocity = velocity
+        self.max_rotation_change = max_rotation_change
 
     def move(self, interval):
         self.location.x += math.cos(self.direction.azimuth) * math.cos(self.direction.elevation) * self.velocity * interval
@@ -28,9 +29,15 @@ class Airplane:
         distance = math.sqrt((location.x - self.location.x) ** 2 + (location.y - self.location.y) ** 2 + (location.h - self.location.h) ** 2)
         return distance
 
+    @DeprecationWarning
     def move_to(self, location: Location3d, interval: float):
         self.direction = self.calculate_Direction_to(location)
         self.move(interval)
+
+    def rotate_to(self,direction:Direction3d):
+        da=self.direction.azimuth-direction.azimuth
+        dh=self.direction.elevation-direction.elevation
+
 
     def __str__(self):
         str_list = []
