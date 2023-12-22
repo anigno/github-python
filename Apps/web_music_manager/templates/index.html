@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Player</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+<h1>Music Player</h1>
+
+<h2>Select a Music Folder:</h2>
+<div id="message01"></div>
+<div id="message02"></div>
+<div id="folders_list_dev">
+    <!-- Music folder buttons will be added here dynamically -->
+</div>
+<h2>Volume:</h2>
+<input type="range" id="volume-slider" min="0" max="100" value="50" step="1">
+<div id="volume-display">Volume: 50</div> <!-- Display volume value here -->
+
+<h2>Duration:</h2>
+<input type="range" id="duration-slider" min="0" max="360" value="60" step="5">
+<div id="duration-display">Duration: 60</div> <!-- Display duration value here -->
+<audio controls>
+    <source id="audio-source" src="" type="audio/mpeg">
+</audio>
+<div id="selected-folder">Selected Folder: </div>
+
+<script>
+    // Add your JavaScript code here
+</script>
+</body>
+</html>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
