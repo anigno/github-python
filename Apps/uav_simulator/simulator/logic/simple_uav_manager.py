@@ -1,20 +1,22 @@
 import time
 from threading import Thread
 
-from Apps.uav_simulator.simulator.Location3d import Location3d
-from Apps.uav_simulator.simulator.direction3d import Direction3d
-from Apps.uav_simulator.simulator.simple_uav import SimpleUavActions
-from Apps.uav_simulator.simulator.uav_params import UavParams
+from Apps.uav_simulator.simulator.data_types.Location3d import Location3d
+from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
+from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
+from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 
 class SimpleUavManager:
     IN_LOCATION_DISTANCE = 10
 
     def __init__(self, name: str, uav_params: UavParams, location: Location3d, direction: Direction3d):
-        self.uav_actions = SimpleUavActions(name, uav_params, location, direction)
-        self.update_thread = Thread('update', target=self.update_thread_start, daemon=True)
+        self.update_thread = Thread(name='update', target=self.update_thread_start, daemon=True)
+        self.destination = self.uav_actions.location
+        self.previous_update_time = 0.0
+
+    def start(self):
         self.previous_update_time = time.time()
         self.update_thread.start()
-        self.destination = self.uav_actions.location
 
     def fly_to(self, destination: Location3d):
         self.destination = destination
