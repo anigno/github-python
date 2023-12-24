@@ -13,7 +13,7 @@ DataReceivedEventArgs = namedtuple('DataReceivedEventArgs', ['received_data_byte
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpCommunicator:
-    """Sends and receives unicast udp data"""
+    """Sends and receives uni-cast udp data"""
     UDP_MAX_BUFFER_SEND_SIZE = 65507
     UDP_DEFAULT_RECEIVE_BUFFER_SIZE = 64 * 1024
 
