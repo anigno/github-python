@@ -7,7 +7,7 @@ from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActio
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 
 class SimpleUavManager:
-    IN_LOCATION_DISTANCE = 10
+    IN_LOCATION_DISTANCE = 10.0
 
     def __init__(self, name: str, uav_params: UavParams, location: Location3d, direction: Direction3d):
         self.name = name
@@ -15,7 +15,7 @@ class SimpleUavManager:
         self.location = location
         self.destination = location
         self.direction = direction
-        self.velocity = 0.0
+        self.velocity = self.uav_params.max_velocity * 0.8
         self.update_thread = Thread(name='update', target=self.update_thread_start, daemon=True)
         self.previous_update_time = 0.0
 
@@ -30,8 +30,8 @@ class SimpleUavManager:
         time.sleep(1)
         new_update_time = time.time()
         delta_time = new_update_time - self.previous_update_time
-        direction = self.calculate_Direction_to(self.destination)
-        distance = self.uav_actions.calculate_distance_to(self.destination)
+        direction = SimpleUavActions.calculate_Direction(self.location, self.destination)
+        distance = SimpleUavActions.calculate_distance(self.location, self.destination)
         if distance > SimpleUavManager.IN_LOCATION_DISTANCE:
-            self.move(delta_time)
+            SimpleUavActions.move(self.location, self.direction, self.velocity, delta_time)
         self.previous_update_time = new_update_time
