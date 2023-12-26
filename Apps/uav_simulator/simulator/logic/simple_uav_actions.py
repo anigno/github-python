@@ -6,7 +6,7 @@ from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 class SimpleUavActions:
 
     @staticmethod
-    def move(location: Location3d, direction: Direction3d, velocity: float, interval: float) -> Location3d:
+    def calculate_new_location(location: Location3d, direction: Direction3d, velocity: float, interval: float) -> Location3d:
         new_location = Location3d()
         new_location.x = location.x + math.cos(direction.azimuth) * math.cos(
             direction.elevation) * velocity * interval

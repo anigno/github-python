@@ -7,7 +7,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def visit_Struct(self, node):
         if not self.in_struct:
-            print(f"Found struct: {node.name}")
+            print(f"Found struct: {node._name}")
             print("Struct Body:")
             print(node.show())
 

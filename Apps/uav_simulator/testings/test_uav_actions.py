@@ -10,30 +10,30 @@ class TestUavActions(unittest.TestCase):
     def test_move(self):
         cos45 = math.cos(math.pi / 4)
         # move 1 second, azimuth=0 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(0.0, 0.0), 1.0, 1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(0.0, 0.0), 1.0, 1.0)
         self.assertAlmostEqual(location.x, 1, 2)
         # move 1 second, azimuth=90 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, 0.0), 1.0, 1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, 0.0), 1.0, 1.0)
         self.assertAlmostEqual(location.y, 1, 2)
         # move 1 second, elevation=45 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(0.0, math.pi / 4), 1.0, 1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(0.0, math.pi / 4), 1.0, 1.0)
         self.assertAlmostEqual(location.x, cos45, 2)
         self.assertAlmostEqual(location.h, cos45, 2)
         # move 1 second, azimuth=45 deg,elevation=45 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 4, math.pi / 4), 1.0,
-                                         1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 4, math.pi / 4), 1.0,
+                                                           1.0)
         self.assertAlmostEqual(location.x, 0.5, 2)
         self.assertAlmostEqual(location.y, 0.5, 2)
         self.assertAlmostEqual(location.h, cos45, 2)
         # move 1 second, azimuth=90 deg,elevation=45 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, math.pi / 4), 1.0,
-                                         1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, math.pi / 4), 1.0,
+                                                           1.0)
         self.assertAlmostEqual(location.x, 0, 2)
         self.assertAlmostEqual(location.y, cos45, 2)
         self.assertAlmostEqual(location.h, cos45, 2)
         # move 1 second, azimuth=90 deg,elevation=90 deg
-        location = SimpleUavActions.move(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, math.pi / 2), 1.0,
-                                         1.0)
+        location = SimpleUavActions.calculate_new_location(Location3d(0.0, 0.0, 0.0), Direction3d(math.pi / 2, math.pi / 2), 1.0,
+                                                           1.0)
         self.assertAlmostEqual(location.x, 0, 2)
         self.assertAlmostEqual(location.y, 0, 2)
         self.assertAlmostEqual(location.h, 1, 2)
