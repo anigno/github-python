@@ -1,11 +1,10 @@
 import sys
-from typing import Dict, List, Optional
+from typing import List
 
 import face_recognition
 import numpy as np
-from sortedcontainers import SortedList
 
-from PythonExamples.face_recognition.utils import log
+from Apps.face_recognition.utils import log
 
 class FaceEncodingStorageItem:
     def __init__(self, encoding: np.ndarray):

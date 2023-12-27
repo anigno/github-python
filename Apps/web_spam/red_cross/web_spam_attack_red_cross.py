@@ -2,7 +2,7 @@ import random
 from threading import Thread
 import requests
 
-from PythonExamples.web_spam.red_cross.data import Data
+from Apps.web_spam.red_cross.data import Data
 
 # https://www.icrc.org/en/contact/
 

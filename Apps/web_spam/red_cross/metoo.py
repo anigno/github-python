@@ -3,7 +3,7 @@ from threading import Thread
 
 import requests
 
-from PythonExamples.web_spam.red_cross.data import Data
+from Apps.web_spam.red_cross.data import Data
 
 headers = {
     'Referer': 'https://www.metoo-unlessurajew.com/_partials/wix-thunderbolt/dist/clientWorker.315bbd37.bundle.min.js',

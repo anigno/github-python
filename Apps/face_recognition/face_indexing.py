@@ -1,11 +1,10 @@
-from typing import List, Tuple
 import face_recognition
 import cv2
 import os
 
 from numpy import ndarray
 
-from PythonExamples.face_recognition.data_types import FaceEncodingStorage
+from Apps.face_recognition.data_types import FaceEncodingStorage
 from utils import log
 
 class FaceIndexing:
