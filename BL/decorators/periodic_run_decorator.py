@@ -1,17 +1,15 @@
-"""
-Decorator for running periodic tasks, using asyncio main loop thread to run registered functions,
-tasks must not block!
-"""
 import asyncio
 import threading
 import time
 
-from PythonExamples.Decorators.UtilDecorators import time_measure_between_calls
+from BL.decorators.time_measure_between_calls_decorator import time_measure_between_calls_decorator
 
 _periodic_run_loop = asyncio.get_event_loop()
 _periodic_tasks = []
 
 def periodic_run_decorator(interval: int):
+    """Decorator for running periodic tasks, using asyncio main loop thread to run registered functions,tasks must not block!"""
+
     def internal(func):
         def wrapper_func(*args, **kwargs):
             t0 = time.process_time()
@@ -50,27 +48,27 @@ if __name__ == '__main__':
             b = math.sqrt(a)
 
     @periodic_run_decorator(1)
-    @time_measure_between_calls
+    @time_measure_between_calls_decorator
     def worker_A1():
         do_work(100000)
 
     @periodic_run_decorator(1)
-    @time_measure_between_calls
+    @time_measure_between_calls_decorator
     def worker_A2():
         do_work(100000)
 
     @periodic_run_decorator(2)
-    @time_measure_between_calls
+    @time_measure_between_calls_decorator
     def worker_B():
         do_work(2000000)
 
     @periodic_run_decorator(3)
-    @time_measure_between_calls
+    @time_measure_between_calls_decorator
     def worker_C():
         do_work(100000)
 
     @periodic_run_decorator(4)
-    @time_measure_between_calls
+    @time_measure_between_calls_decorator
     def worker_D():
         do_work(100000)
 

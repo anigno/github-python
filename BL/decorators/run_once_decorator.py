@@ -1,4 +1,5 @@
 def run_once_decorator(func):
+    """run function one time only"""
     already_run = False
 
     def wrapper(*args, **kwargs):

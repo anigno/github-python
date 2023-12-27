@@ -2,7 +2,7 @@ import math
 import threading
 import time
 
-from Decorators.typeVerifier import typeVerifierDecorator
+from BL.decorators.typeVerifier import typeVerifierDecorator
 
 totalTime=[0,0,0]
 breakAll=False
