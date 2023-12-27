@@ -14,4 +14,4 @@ class Direction3d:
         return math.degrees(self.elevation)
 
     def __str__(self):
-        return f'(az={math.degrees(self.azimuth)},el={math.degrees(self.elevation)})'
+        return f'(az={math.degrees(self.azimuth):.3f},el={math.degrees(self.elevation):.3f})'

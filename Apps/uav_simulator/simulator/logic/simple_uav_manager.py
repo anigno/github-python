@@ -1,5 +1,6 @@
 import time
 from threading import Thread
+from typing import Optional
 
 from Apps.uav_simulator.simulator.data_types.Location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
@@ -16,17 +17,18 @@ class UpdateEventArgs:
 class SimpleUavManager:
     IN_LOCATION_DISTANCE = 10.0
 
-    def __init__(self, name: str, uav_params: UavParams, location: Location3d):
+    def __init__(self, name: str, uav_params: UavParams, location: Location3d, update_interval=1.0):
         self._name = name
-        self._uav_params = uav_params
+        self.uav_params = uav_params
         self._location = location
         self._destination = location
-        self._velocity = self._uav_params.max_velocity * 0.8
-        self._update_thread = Thread(name='update', target=self._update_thread_start, daemon=True)
+        self._velocity = self.uav_params.flight_velocity
+        self._update_thread: Optional[Thread] = None
         self._previous_update_time = 0.0
         self._is_update_thread_run = False
         self._direction = Direction3d()
-        self.remaining_flight_time = self._uav_params.max_flight_time
+        self._remaining_flight_time = 0
+        self._update_interval = update_interval
         self.on_update = GenericEvent(UpdateEventArgs, '')
 
     @property
@@ -36,6 +38,8 @@ class SimpleUavManager:
     def start(self):
         self._is_update_thread_run = True
         self._previous_update_time = time.time()
+        self.reset_flight_time()
+        self._update_thread = Thread(name='update', target=self._update_thread_start, daemon=True)
         self._update_thread.start()
 
     def stop(self):
@@ -43,6 +47,9 @@ class SimpleUavManager:
 
     def set_destination(self, destination: Location3d):
         self._destination = destination
+
+    def reset_flight_time(self):
+        self._remaining_flight_time = self.uav_params.max_flight_time
 
     def __str__(self):
         s = ''
@@ -52,15 +59,15 @@ class SimpleUavManager:
 
     def _update_thread_start(self):
         while self._is_update_thread_run:
-            time.sleep(1)
+            time.sleep(self._update_interval)
             new_update_time = time.time()
             delta_time = new_update_time - self._previous_update_time
             self._direction = SimpleUavActions.calculate_Direction(self._location, self._destination)
             distance = SimpleUavActions.calculate_distance(self._location, self._destination)
             if distance > SimpleUavManager.IN_LOCATION_DISTANCE:
                 self._location = SimpleUavActions.calculate_new_location(self._location, self._direction, self._velocity, delta_time)
-            self.on_update.raise_event(UpdateEventArgs(self._location, self._direction, self.remaining_flight_time))
-            self.remaining_flight_time -= delta_time
+            self.on_update.raise_event(UpdateEventArgs(self._location, self._direction, self._remaining_flight_time))
+            self._remaining_flight_time -= delta_time
             self._previous_update_time = new_update_time
 
 if __name__ == '__main__':
@@ -71,12 +78,12 @@ if __name__ == '__main__':
     z = []
 
     def on_update_event_handler(update_event_args: UpdateEventArgs):
-        print(f'location={update_event_args.location} remaining={update_event_args.remaining_flight_time}')
+        print(f'location={update_event_args.location} remaining={update_event_args.remaining_flight_time:.1f}s')
         x.append(update_event_args.location.x)
         y.append(update_event_args.location.y)
         z.append(update_event_args.location.h)
 
-    uav = SimpleUavManager('uav1', UavParams(60, 5), Location3d(0, 0, 0))
+    uav = SimpleUavManager('uav1', UavParams(60, 5), Location3d(0, 0, 0), 0.5)
     uav.on_update.register(on_update_event_handler)
     uav.start()
     time.sleep(2)
@@ -85,6 +92,10 @@ if __name__ == '__main__':
     uav.set_destination(Location3d(100, 100, 100))
     time.sleep(6)
     uav.set_destination(Location3d(0, 0, 0))
-    time.sleep(10)
+    time.sleep(4)
+    uav.stop()
+    time.sleep(1)
+    uav.start()
+    time.sleep(6)
     draw3d(x, y, z)
-    input('enter to exit')
+

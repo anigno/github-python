@@ -5,4 +5,4 @@ class Location3d:
         self.h = h
 
     def __str__(self):
-        return f'(x={self.x},y={self.y},h={self.h})'
+        return f'(x={self.x:.3f},y={self.y:.3f},h={self.h:.3f})'
