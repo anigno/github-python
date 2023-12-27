@@ -1,5 +1,4 @@
 import time
-from collections import namedtuple
 from threading import Thread
 
 from Apps.uav_simulator.simulator.data_types.Location3d import Location3d
@@ -8,7 +7,11 @@ from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActio
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from common.generic_event import GenericEvent
 
-UpdateEventArgs = namedtuple('UpdateEventArgs', ['location', 'direction', 'remaining_flight_time'])
+class UpdateEventArgs:
+    def __init__(self, location, direction, remaining_flight_time):
+        self.location: Location3d = location
+        self.direction: Direction3d = direction
+        self.remaining_flight_time: float = remaining_flight_time
 
 class SimpleUavManager:
     IN_LOCATION_DISTANCE = 10.0
@@ -61,15 +64,27 @@ class SimpleUavManager:
             self._previous_update_time = new_update_time
 
 if __name__ == '__main__':
+    from Apps.uav_simulator.testings.draw_course import draw3d
+
+    x = []
+    y = []
+    z = []
+
     def on_update_event_handler(update_event_args: UpdateEventArgs):
         print(f'location={update_event_args.location} remaining={update_event_args.remaining_flight_time}')
+        x.append(update_event_args.location.x)
+        y.append(update_event_args.location.y)
+        z.append(update_event_args.location.h)
 
     uav = SimpleUavManager('uav1', UavParams(60, 5), Location3d(0, 0, 0))
     uav.on_update.register(on_update_event_handler)
     uav.start()
     time.sleep(2)
     uav.set_destination(Location3d(100, 100, 0))
-    time.sleep(4)
+    time.sleep(6)
     uav.set_destination(Location3d(100, 100, 100))
-
+    time.sleep(6)
+    uav.set_destination(Location3d(0, 0, 0))
+    time.sleep(10)
+    draw3d(x, y, z)
     input('enter to exit')
