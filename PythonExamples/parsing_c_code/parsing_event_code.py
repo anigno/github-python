@@ -21,4 +21,4 @@ class ParsingEventCode:
 
 if __name__ == '__main__':
     parser = ParsingEventCode()
-    parser.parse(r'C:\Users\503392062\Downloads\PET_ConfirmGdbLog_Processed-OlgaNew.txt')
+    parser.parse(r'C:\Users\503392062\Downloads\schedule_patient_MobaXterm_10.135.192.49ctuser_20231227_140048.txt')
