@@ -3,12 +3,12 @@ import time
 from threading import Thread
 
 from common.time_utils import TimeUtils
-from communication.reliable_udp.partition import Partition
 from communication.reliable_udp.partition_manager import PartitionManager
 from communication.reliable_udp.reliability_manager import PartitionEventArgs, ReliabilityManager
 from communication.reliable_udp.reliable_communicator_config import ReliableCommunicatorConfig
 from communication.reliable_udp.unique_id_provider import UniqueIdProvider
-from communication.udp_communicator import DataReceivedEventArgs, UdpCommunicator
+from communication.udp.udp_communicator import UdpCommunicator
+from communication.udp.data_received_event_args import DataReceivedEventArgs
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)

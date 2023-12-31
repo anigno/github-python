@@ -1,7 +1,6 @@
+import matplotlib
 import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
 import random
-
 def draw3d(xa: [], ya: [], za: [], title='Graph3d'):
     fig = plt.figure(figsize=(10, 6))
     ax = plt.axes(projection="3d")

@@ -7,6 +7,7 @@ from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from common.generic_event import GenericEvent
+from common.printable_params import PrintableParams
 
 class UpdateEventArgs:
     def __init__(self, location, direction, remaining_flight_time):
@@ -52,10 +53,7 @@ class SimpleUavManager:
         self._remaining_flight_time = self.uav_params.max_flight_time
 
     def __str__(self):
-        s = ''
-        for k in self.__dict__:
-            s = s + f'{k}={str(self.__dict__[k])},'
-        return s
+        return PrintableParams.to_string(self)
 
     def _update_thread_start(self):
         while self._is_update_thread_run:
@@ -65,7 +63,8 @@ class SimpleUavManager:
             self._direction = SimpleUavActions.calculate_Direction(self._location, self._destination)
             distance = SimpleUavActions.calculate_distance(self._location, self._destination)
             if distance > SimpleUavManager.IN_LOCATION_DISTANCE:
-                self._location = SimpleUavActions.calculate_new_location(self._location, self._direction, self._velocity, delta_time)
+                self._location = SimpleUavActions.calculate_new_location(self._location, self._direction,
+                                                                         self._velocity, delta_time)
             self.on_update.raise_event(UpdateEventArgs(self._location, self._direction, self._remaining_flight_time))
             self._remaining_flight_time -= delta_time
             self._previous_update_time = new_update_time
@@ -83,19 +82,19 @@ if __name__ == '__main__':
         y.append(update_event_args.location.y)
         z.append(update_event_args.location.h)
 
-    uav = SimpleUavManager('uav1', UavParams(60, 5), Location3d(0, 0, 0), 0.5)
+    uav = SimpleUavManager('uav1', UavParams(), Location3d(0, 0, 0), 0.5)
+    print(uav)
     uav.on_update.register(on_update_event_handler)
     uav.start()
     time.sleep(2)
     uav.set_destination(Location3d(100, 100, 0))
-    time.sleep(6)
+    time.sleep(3)
     uav.set_destination(Location3d(100, 100, 100))
-    time.sleep(6)
+    time.sleep(3)
     uav.set_destination(Location3d(0, 0, 0))
-    time.sleep(4)
+    time.sleep(2)
     uav.stop()
     time.sleep(1)
     uav.start()
     time.sleep(6)
-    draw3d(x, y, z)
-
+    # draw3d(x, y, z)

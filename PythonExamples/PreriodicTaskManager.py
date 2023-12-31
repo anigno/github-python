@@ -16,7 +16,7 @@ class PreriodicTaskManager:
 
     def Start(self):
         for taskThread in self._tasksThreads:
-            taskThread.start()
+            taskThread.start_receiving()
 
     def taskFunction(self, name, periodic, count, taskFunction, functionArgs):
         cnt = 0
