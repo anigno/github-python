@@ -19,10 +19,9 @@ class UdpMessagesCommunicator:
     """sends and receives messages based of MessageBase, after crc verifications and serialization"""
 
     def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase
-                 , message_serializer: MessageSerializerBase,
-                 receive_buffer_size=UdpCommunicator.UDP_DEFAULT_RECEIVE_BUFFER_SIZE):
+                 , message_serializer: MessageSerializerBase):
         self.message_serializer = message_serializer
-        self.communicator = UdpCommunicatorWithCrc(local_ip, local_port, crc_provider, receive_buffer_size)
+        self.communicator = UdpCommunicatorWithCrc(local_ip, local_port, crc_provider)
         self.communicator.on_data_received += self._on_data_received
         self.communicator.on_crc_error += self._on_crc_error
         self.communicator.on_error += self._on_communicator_error

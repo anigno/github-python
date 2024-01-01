@@ -10,9 +10,8 @@ logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpCommunicatorWithCrc(UdpCommunicator):
 
-    def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase,
-                 receive_buffer_size=UdpCommunicator.UDP_DEFAULT_RECEIVE_BUFFER_SIZE):
-        super().__init__(local_ip, local_port, receive_buffer_size)
+    def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase):
+        super().__init__(local_ip, local_port)
         self.crc_provider = crc_provider
         self.on_crc_error = GenericEvent(CrcErrorEventArgs)
 
