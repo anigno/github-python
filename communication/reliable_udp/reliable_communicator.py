@@ -8,7 +8,7 @@ from communication.reliable_udp.reliability_manager import PartitionEventArgs, R
 from communication.reliable_udp.reliable_communicator_config import ReliableCommunicatorConfig
 from communication.reliable_udp.unique_id_provider import UniqueIdProvider
 from communication.udp.udp_communicator import UdpCommunicator
-from communication.udp.data_received_event_args import DataReceivedEventArgs
+from communication.udp.event_args.data_received_event_args import DataReceivedEventArgs
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)

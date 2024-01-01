@@ -11,7 +11,7 @@ class GenericEvent:
         self._handlers = []
 
     def raise_event(self, data: any):
-        if not type(data) is self.args_type:
+        if not issubclass(type(data), self.args_type):
             raise Exception(f'event types mismatch. expected type: {self.args_type} but received type: {type(data)}')
         for handler in self._handlers:
             handler(data)

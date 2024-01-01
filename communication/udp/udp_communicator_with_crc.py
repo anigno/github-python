@@ -1,7 +1,7 @@
 import time
 import logging
 from common.generic_event import GenericEvent
-from communication.udp.crc_error_event_args import CrcErrorEventArgs
+from communication.udp.event_args.crc_error_event_args import CrcErrorEventArgs
 from common.crc.crc_providers import CrcProviderBase, CrcProvider32Bit
 from communication.udp.udp_communicator import UdpCommunicator
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode

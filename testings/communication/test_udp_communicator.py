@@ -2,7 +2,7 @@ import time
 import unittest
 
 from communication.udp.udp_communicator import UdpCommunicator
-from communication.udp.data_received_event_args import DataReceivedEventArgs
+from communication.udp.event_args.data_received_event_args import DataReceivedEventArgs
 
 class TestUdpCommunicator(unittest.TestCase):
     def setUp(self) -> None:

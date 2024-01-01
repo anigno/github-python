@@ -5,7 +5,7 @@ from threading import Thread
 from typing import Optional
 
 from common.generic_event import GenericEvent
-from communication.udp.data_received_event_args import DataReceivedEventArgs
+from communication.udp.event_args.data_received_event_args import DataReceivedEventArgs
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
@@ -24,7 +24,7 @@ class UdpCommunicator:
         self._socket: Optional[socket.socket] = None
         self._receiver_thread = None
         self.on_data_received = GenericEvent(DataReceivedEventArgs)
-        self.on_error = GenericEvent(str)
+        self.on_error = GenericEvent(Exception)
         self._init_socket_as_unicast()
 
     def start_receiving(self) -> Thread:
@@ -55,7 +55,8 @@ class UdpCommunicator:
                     logger.exception('', exc_info=ex)
                     self.on_error.raise_event(str(ex))
             except Exception as ex:
-                self.on_error.raise_event(str(ex))
+                logger.exception('', exc_info=ex)
+                self.on_error.raise_event(ex)
 
     def handle_data_received(self, received_data_bytes, sender_endpoint_tuple):
         event_args = DataReceivedEventArgs(received_data_bytes, sender_endpoint_tuple)

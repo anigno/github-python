@@ -4,7 +4,7 @@ import unittest
 from common.crc.crc_providers import CrcProviderBase, CrcVerificationResult
 from communication.udp.udp_communicator import BytesReceivedEventArgs
 from communication.udp.udp_communicator_with_crc import UdpCommunicatorWithCrc
-from communication.udp.crc_error_event_args import CrcErrorEventArgs
+from communication.udp.event_args.crc_error_event_args import CrcErrorEventArgs
 
 class CrcProviderMock(CrcProviderBase):
     def __init__(self):
