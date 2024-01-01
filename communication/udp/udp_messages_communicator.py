@@ -1,6 +1,5 @@
 import logging
 import time
-from threading import RLock
 from common.crc.crc_providers import CrcProviderBase, CrcProvider32Bit
 from common.generic_event import GenericEvent
 from communication.udp.event_args.crc_error_event_args import CrcErrorEventArgs
@@ -9,7 +8,6 @@ from communication.udp.message_base import MessageBase
 from communication.udp.event_args.message_data_event_args import MessageDataEventArgs
 from communication.udp.serializers.pickle_message_serializer import PickleMessageSerializer
 from communication.udp.serializers.message_serializer_base import MessageSerializerBase
-from communication.udp.udp_communicator import UdpCommunicator
 from communication.udp.udp_communicator_with_crc import UdpCommunicatorWithCrc
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
@@ -18,15 +16,14 @@ logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 class UdpMessagesCommunicator:
     """sends and receives messages based of MessageBase, after crc verifications and serialization"""
 
-    def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase
-                 , message_serializer: MessageSerializerBase):
+    def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase,
+                 message_serializer: MessageSerializerBase):
         self.message_serializer = message_serializer
         self.communicator = UdpCommunicatorWithCrc(local_ip, local_port, crc_provider)
         self.communicator.on_data_received += self._on_data_received
         self.communicator.on_crc_error += self._on_crc_error
         self.communicator.on_error += self._on_communicator_error
         self.on_message_received = GenericEvent(MessageDataEventArgs)
-        self.statistics_locker = RLock()
 
     def start_receiving(self):
         self.communicator.start_receiving()

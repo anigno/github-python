@@ -26,6 +26,7 @@ class UdpCommunicationManager:
     def dequeue_received_message(self):
         return self.received_messages_queue.get()
 
+    @property
     def receive_messaged_queue_size(self):
         return self.received_messages_queue.qsize()
 
@@ -70,11 +71,11 @@ if __name__ == '__main__':
         comm1.send_to('127.0.0.1', 1002, Message1(a))
         comm1.send_to('127.0.0.1', 1002, Message2(a + 10))
     time.sleep(1)
-    logger.debug(f'queue size={comm2.receive_messaged_queue_size()}')
+    logger.debug(f'queue size={comm2.receive_messaged_queue_size}')
     for _ in range(10):
         args = comm2.dequeue_received_message()
         logger.debug(f'{args.message_type} {args.sender_endpoint} {args.message}')
-    logger.debug(f'queue size={comm2.receive_messaged_queue_size()}')
+    logger.debug(f'queue size={comm2.receive_messaged_queue_size}')
 
     comm1.stop_receiving()
     comm2.stop_receiving()

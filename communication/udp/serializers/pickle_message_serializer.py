@@ -1,5 +1,4 @@
 import pickle
-
 from communication.udp.message_base import MessageBase
 from communication.udp.serializers.message_serializer_base import MessageSerializerBase
 
