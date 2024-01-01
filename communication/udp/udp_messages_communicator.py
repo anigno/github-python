@@ -7,7 +7,8 @@ from communication.udp.event_args.crc_error_event_args import CrcErrorEventArgs
 from communication.udp.event_args.data_received_event_args import DataReceivedEventArgs
 from communication.udp.message_base import MessageBase
 from communication.udp.event_args.message_data_event_args import MessageDataEventArgs
-from communication.udp.pickle_message_serializer import MessageSerializerBase, PickleMessageSerializer
+from communication.udp.serializers.pickle_message_serializer import PickleMessageSerializer
+from communication.udp.serializers.message_serializer_base import MessageSerializerBase
 from communication.udp.udp_communicator import UdpCommunicator
 from communication.udp.udp_communicator_with_crc import UdpCommunicatorWithCrc
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
@@ -22,9 +23,9 @@ class UdpMessagesCommunicator:
                  receive_buffer_size=UdpCommunicator.UDP_DEFAULT_RECEIVE_BUFFER_SIZE):
         self.message_serializer = message_serializer
         self.communicator = UdpCommunicatorWithCrc(local_ip, local_port, crc_provider, receive_buffer_size)
-        self.communicator.on_data_received += self.on_data_received
-        self.communicator.on_crc_error += self.on_crc_error
-        self.communicator.on_error += self.on_communicator_error
+        self.communicator.on_data_received += self._on_data_received
+        self.communicator.on_crc_error += self._on_crc_error
+        self.communicator.on_error += self._on_communicator_error
         self.on_message_received = GenericEvent(MessageDataEventArgs)
         self.statistics_locker = RLock()
 
@@ -40,7 +41,7 @@ class UdpMessagesCommunicator:
         buffer = message_type_bytes + buffer
         self.communicator.send_to(target_ip, target_port, buffer)
 
-    def on_data_received(self, args: DataReceivedEventArgs):
+    def _on_data_received(self, args: DataReceivedEventArgs):
         message_data = MessageDataEventArgs()
         message_type_bytes = args.received_data_bytes[0:2]
         message_data.message_type = int.from_bytes(message_type_bytes, byteorder='big')
@@ -50,10 +51,10 @@ class UdpMessagesCommunicator:
         message_data.sender_endpoint = args.sender_endpoint_tuple
         self.on_message_received.raise_event(message_data)
 
-    def on_crc_error(self, args: CrcErrorEventArgs):
+    def _on_crc_error(self, args: CrcErrorEventArgs):
         logger.warning(f'crc error, sender:{args.sender_endpoint_tuple}')
 
-    def on_communicator_error(self, args: str):
+    def _on_communicator_error(self, args: str):
         logger.warning(f'communicator error, sender:{args}')
 
 if __name__ == '__main__':
