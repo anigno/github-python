@@ -1,36 +1,25 @@
 import time
-from threading import Thread
+from threading import Thread, RLock
 from typing import Optional
-
 from Apps.uav_simulator.simulator.data_types.Location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
+from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
+from Apps.uav_simulator.simulator.event_args.update_event_args import UpdateEventArgs
 from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from common.generic_event import GenericEvent
 from common.printable_params import PrintableParams
 
-class UpdateEventArgs:
-    def __init__(self, location, direction, remaining_flight_time):
-        self.location: Location3d = location
-        self.direction: Direction3d = direction
-        self.remaining_flight_time: float = remaining_flight_time
-
 class SimpleUavManager:
     IN_LOCATION_DISTANCE = 10.0
 
-    def __init__(self, name: str, uav_params: UavParams, location: Location3d, update_interval=1.0):
+    def __init__(self, name: str, uav_params: UavParams, location: Location3d):
         self._name = name
         self.uav_params = uav_params
-        self._location = location
-        self._destination = location
-        self._velocity = self.uav_params.flight_velocity
+        self.uav_status = UavStatus(location)
         self._update_thread: Optional[Thread] = None
-        self._previous_update_time = 0.0
         self._is_update_thread_run = False
-        self._direction = Direction3d()
-        self._remaining_flight_time = 0
-        self._update_interval = update_interval
-        self.on_update = GenericEvent(UpdateEventArgs, '')
+        self.on_update = GenericEvent(UpdateEventArgs)
+        self._remaining_flight_time = 0.0
 
     @property
     def name(self):
@@ -38,7 +27,7 @@ class SimpleUavManager:
 
     def start(self):
         self._is_update_thread_run = True
-        self._previous_update_time = time.time()
+        # self._previous_update_time = time.time()
         self.reset_flight_time()
         self._update_thread = Thread(name='update', target=self._update_thread_start, daemon=True)
         self._update_thread.start()
@@ -47,31 +36,31 @@ class SimpleUavManager:
         self._is_update_thread_run = False
 
     def set_destination(self, destination: Location3d):
-        self._destination = destination
+        self.uav_status. = destination
 
     def reset_flight_time(self):
-        self._remaining_flight_time = self.uav_params.max_flight_time
+        with self.uav_status_locker:
+            self._remaining_flight_time = self.uav_params.max_flight_time
 
     def __str__(self):
         return PrintableParams.to_string(self)
 
     def _update_thread_start(self):
+        previous_update_time = time.time()
         while self._is_update_thread_run:
-            time.sleep(self._update_interval)
+            time.sleep(self.uav_params.update_interval)
             new_update_time = time.time()
-            delta_time = new_update_time - self._previous_update_time
+            delta_time = new_update_time - previous_update_time
             self._direction = SimpleUavActions.calculate_Direction(self._location, self._destination)
             distance = SimpleUavActions.calculate_distance(self._location, self._destination)
             if distance > SimpleUavManager.IN_LOCATION_DISTANCE:
                 self._location = SimpleUavActions.calculate_new_location(self._location, self._direction,
-                                                                         self._velocity, delta_time)
+                                                                         self.uav_params.flight_velocity, delta_time)
             self.on_update.raise_event(UpdateEventArgs(self._location, self._direction, self._remaining_flight_time))
-            self._remaining_flight_time -= delta_time
-            self._previous_update_time = new_update_time
+            with self.uav_status_locker:
+                self._remaining_flight_time -= delta_time
 
 if __name__ == '__main__':
-    from Apps.uav_simulator.testings.draw_course import draw3d
-
     x = []
     y = []
     z = []
