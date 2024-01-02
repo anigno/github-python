@@ -1,4 +1,3 @@
-import pickle
 from abc import ABC
 
 class MessageBase(ABC):

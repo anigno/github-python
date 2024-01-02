@@ -73,8 +73,8 @@ if __name__ == '__main__':
     time.sleep(1)
     logger.debug(f'queue size={comm2.receive_messaged_queue_size}')
     for _ in range(10):
-        args = comm2.dequeue_received_message()
-        logger.debug(f'{args.message_type} {args.sender_endpoint} {args.message}')
+        args1 = comm2.dequeue_received_message()
+        logger.debug(f'{args1.message_type} {args1.sender_endpoint} {args1.message}')
     logger.debug(f'queue size={comm2.receive_messaged_queue_size}')
 
     comm1.stop_receiving()

@@ -31,7 +31,7 @@ class UdpMessagesCommunicator:
     def stop_receiving(self):
         self.communicator.stop_receiving()
 
-    def send_to(self, target_ip, target_port, message: MessageBase):
+    def send_to(self, target_ip: str, target_port: int, message: MessageBase):
         buffer = self.message_serializer.to_buffer(message)
         message_type_bytes = message.MESSAGE_TYPE.to_bytes(length=2, byteorder='big')
         buffer = message_type_bytes + buffer

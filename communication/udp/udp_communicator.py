@@ -73,7 +73,7 @@ if __name__ == '__main__':
     com2.start_receiving()
 
     com1.send_to("127.0.0.1", 1002, b"1234567890")
-    com2.send_to("127.0.0.1", 1001, b"abcdefghij")
+    com2.send_to("127.0.0.1", 1001, b"hello")
 
     time.sleep(1)
     logger.debug(f'all sent')
