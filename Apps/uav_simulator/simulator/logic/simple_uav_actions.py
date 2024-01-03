@@ -4,6 +4,7 @@ from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 
 class SimpleUavActions:
+    RANDOMIZE_FACTOR = 0.1
 
     @staticmethod
     def calculate_new_location(location: Location3d, direction: Direction3d, velocity: float, interval: float) -> Location3d:

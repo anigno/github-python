@@ -1,6 +1,8 @@
 import time
 from threading import Thread, RLock
-from typing import Optional
+from typing import Optional, List
+from Apps.uav_simulator.simulator.capabilities.camera_simulation_capability import CameraSimulationCapability
+from Apps.uav_simulator.simulator.capabilities.capability_base import CapabilityBase
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
 from Apps.uav_simulator.simulator.event_args.update_event_args import UpdateEventArgs
@@ -15,7 +17,7 @@ from communication.udp.udp_communication_manager import UdpCommunicationManager
 
 class SimpleUavManager:
 
-    def __init__(self, uav_params: UavParams, location: Location3d):
+    def __init__(self, uav_params: UavParams, location: Location3d, capabilities: List[CapabilityBase]):
         self.uav_params = uav_params
         self.uav_status = UavStatus(location)
         self.status_locker = RLock()
@@ -23,6 +25,7 @@ class SimpleUavManager:
         self._is_update_thread_run = False
         self.on_update = GenericEvent(UpdateEventArgs)
         self.communicator = UdpCommunicationManager(uav_params.local_ip, uav_params.local_port, CrcProvider32Bit(), PickleMessageSerializer())
+        self.capabilities = capabilities
 
     def start(self):
         with self.status_locker:
@@ -54,7 +57,7 @@ class SimpleUavManager:
             time.sleep(self.uav_params.update_interval)
             new_update_time = time.time()
             delta_time = new_update_time - previous_update_time
-            previous_update_time=new_update_time
+            previous_update_time = new_update_time
             with self.status_locker:
                 self.uav_status.direction = SimpleUavActions.calculate_Direction(self.uav_status.location, self.uav_status.destination)
                 distance = SimpleUavActions.calculate_distance(self.uav_status.location, self.uav_status.destination)
@@ -63,7 +66,10 @@ class SimpleUavManager:
                                                                                        self.uav_params.flight_velocity, delta_time)
                 remaining_flight_time = self.uav_status.remaining_flight_time
                 self.uav_status.remaining_flight_time -= delta_time
-            self.on_update.raise_event(UpdateEventArgs(self.uav_status.location.new(), self.uav_status.direction.new(), remaining_flight_time))
+                capabilities_data = [capability.get(self.uav_status) for capability in self.capabilities]
+                ground_control_message = GroundControlUpdateMessage()
+                self.communicator.send_to(self.uav_params.ground_control_ip, self.uav_params.ground_control_port, ground_control_message)
+            self.on_update.raise_event(UpdateEventArgs(self.uav_status.location.new(), self.uav_status.direction.new(), remaining_flight_time, capabilities_data))
 
 if __name__ == '__main__':
     x = []
@@ -85,7 +91,7 @@ if __name__ == '__main__':
               'local_port': 2001,
               'ground_control_ip': '127.0.0.1',
               'ground_control_port': 1000}
-    uav = SimpleUavManager(UavParams(config), Location3d(0, 0, 0))
+    uav = SimpleUavManager(UavParams(config), Location3d(0, 0, 0), [CameraSimulationCapability()])
     print(uav)
     uav.on_update.register(on_update_event_handler)
     uav.start()
