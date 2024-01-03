@@ -5,6 +5,10 @@ class Direction3d:
         self.azimuth = azimuth
         self.elevation = elevation
 
+    def new(self):
+        """generate new Direction3d instance with current fields values"""
+        return Direction3d(self.azimuth, self.elevation)
+
     @property
     def azimuth_degree(self):
         return math.degrees(self.azimuth)

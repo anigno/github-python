@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from Apps.uav_simulator.simulator.data_types.Location3d import Location3d
+from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 
