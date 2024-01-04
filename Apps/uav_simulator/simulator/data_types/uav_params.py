@@ -14,8 +14,8 @@ class UavParams:
         self.update_interval = uav_config['update_interval']
         self.in_location_distance = uav_config['in_location_distance']
         # communication
-        self.local_ip = uav_config['local_ip']
-        self.local_port = uav_config['local_port']
+        self.uav_ip = uav_config['local_ip']
+        self.uav_port = uav_config['local_port']
         self.ground_control_ip = uav_config['ground_control_ip']
         self.ground_control_port = uav_config['ground_control_port']
 
