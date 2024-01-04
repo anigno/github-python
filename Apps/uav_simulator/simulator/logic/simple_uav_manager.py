@@ -26,6 +26,7 @@ class SimpleUavManager:
         self.uav_status = UavStatus(location)
         self.status_locker = RLock()
         self._update_thread: Optional[Thread] = None
+        self._messages_reading_thread: Optional[Thread] = None
         self._is_update_thread_run = False
         self.on_update = GenericEvent(UpdateEventArgs)
         self.communicator = UdpCommunicationManager(uav_params.uav_ip, uav_params.uav_port, CrcProvider32Bit(), PickleMessageSerializer())
@@ -39,6 +40,7 @@ class SimpleUavManager:
         self.reset_flight_time()
         self._update_thread = Thread(name='update', target=self._update_thread_start, daemon=True)
         self._update_thread.start()
+        self._messages_reading_thread = Thread(name='receive', target=self._messages_reading_thread_start, daemon=True)
 
     def stop(self):
         with self.status_locker:
@@ -74,6 +76,11 @@ class SimpleUavManager:
                 ground_control_message = GroundControlUpdateMessage(self.uav_params.name, self.uav_status, capabilities_data)
                 self.communicator.send_to(self.uav_params.ground_control_ip, self.uav_params.ground_control_port, ground_control_message)
             self.on_update.raise_event(UpdateEventArgs(self.uav_status.location.new(), self.uav_status.direction.new(), self.uav_status.remaining_flight_time, capabilities_data))
+
+    def _messages_reading_thread_start(self):
+        while self._is_update_thread_run:
+            time.sleep(self.uav_params.update_interval)
+            message_data_args = self.communicator.dequeue_received_message()
 
 if __name__ == '__main__':
     from Apps.uav_simulator.testings.draw_course import draw3d
