@@ -53,7 +53,7 @@ class UdpCommunicator:
             except OSError as ex:
                 if self._is_continue:
                     logger.exception('', exc_info=ex)
-                    self.on_error.raise_event(str(ex))
+                    self.on_error.raise_event(ex)
             except Exception as ex:
                 logger.exception('', exc_info=ex)
                 self.on_error.raise_event(ex)

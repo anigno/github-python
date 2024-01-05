@@ -11,6 +11,7 @@ class MessageBase(ABC):
         with MessageBase._unique_id_locker:
             self.message_id = MessageBase._unique_id_counter
             MessageBase._unique_id_counter += 1
+        self.sent_time: int = 0
 
 if __name__ == '__main__':
     from threading import Thread

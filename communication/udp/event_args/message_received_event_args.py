@@ -2,7 +2,7 @@ from typing import Tuple, Optional
 
 from communication.udp.message_base import MessageBase
 
-class MessageDataEventArgs:
+class MessageReceivedEventArgs:
     """received message data args"""
     def __init__(self):
         self.message_type: int = 0
