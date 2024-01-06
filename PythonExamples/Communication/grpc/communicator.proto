@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package communicator;
+
+service Communicator {
+  rpc SendMessage (Message) returns (Message) {}
+}
+
+message Message {
+  string content = 1;
+  string type = 2;  // Optional field for message type
+}
