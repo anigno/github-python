@@ -12,7 +12,6 @@ logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpCommunicator:
     """Sends and receives uni-cast udp data"""
-    UDP_MAX_BUFFER_SEND_SIZE = 65507
     UDP_DEFAULT_RECEIVE_BUFFER_SIZE = 64 * 1024
 
     def __init__(self, local_ip: str, local_port: int, receive_buffer_size: int = UDP_DEFAULT_RECEIVE_BUFFER_SIZE):
