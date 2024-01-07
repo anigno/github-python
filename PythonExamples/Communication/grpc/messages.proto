@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package grpc_example;
+
+message TextMessage {
+  string text = 1;
+}
+
+service TextMessageService {
+  rpc SendMessage (TextMessage) returns (TextMessage);
+}
