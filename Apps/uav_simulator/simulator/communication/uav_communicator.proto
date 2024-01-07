@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package UavCommunicator;
+
+enum FlightState {
+  OFF = 0;
+  IDLE = 10;
+  TO_DESTINATION = 20;
+  TO_HOME = 30;
+  HOLD_POSITION = 40;
+}
+message Location3d{
+  double x_lon=10;
+  double y_lat=20;
+  double h_asl=30;
+}
+message Direction3d{
+  double azimuth=10;
+  double elevation=20;
+}
+message UavStatus{
+  Location3d location=10;
+  Direction3d direction=20;
+  double velocity=30;
+  uint32 remaining_flight_time=40;
+  FlightState flight_state=50;
+}
+message FlyToDestination {
+  uint32 message_id=1;
+  uint32 mission_id=10;
+  bool is_destination_home=20;
+  Location3d location = 30;
+}
+
+message StatusUpdate {
+  uint32 message_id=1;
+  string uav_descriptor = 10;
+  UavStatus uav_status=20;
+}
+
+message response{
+  string response_string=10;
+}
+service CommunicationService {
+  rpc SendStatusUpdate (StatusUpdate) returns (response);
+  rpc SendFlyToDestination (FlyToDestination) returns (response);
+}
