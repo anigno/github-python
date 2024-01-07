@@ -17,7 +17,11 @@ class CommunicationServicer(communication_pb2_grpc.CommunicationServiceServicer)
         return communication_pb2.StatusUpdate(drone_id=request.drone_id, status_message="Status update received")
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=[
+        ('grpc.max_receive_message_length', 100 * 1024 * 1024),  # Set the maximum receive message size to 100 MB
+        ('grpc.max_send_message_length', 100 * 1024 * 1024),  # Set the maximum send message size to 100 MB
+        ('grpc.default_compression_algorithm', grpc.Compression.Gzip),  # Enable Gzip compression
+    ])
     communication_pb2_grpc.add_CommunicationServiceServicer_to_server(CommunicationServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
