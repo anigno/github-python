@@ -18,6 +18,7 @@ message response{
 message Acknowledge {
   bool success = 1;
   string message = 2;
+  string text=3;
 }
 service CommunicationService {
   rpc SendMission (Mission) returns (response);

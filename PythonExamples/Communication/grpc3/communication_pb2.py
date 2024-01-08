@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ommunication.proto\x12\rcommunication\"1\n\x07Mission\x12\x10\n\x08\x64rone_id\x18\x01 \x01(\r\x12\x14\n\x0cmission_data\x18\x02 \x01(\t\"8\n\x0cStatusUpdate\x12\x10\n\x08\x64rone_id\x18\x01 \x01(\r\x12\x16\n\x0estatus_message\x18\x02 \x01(\t\"\x18\n\x08response\x12\x0c\n\x04text\x18\x01 \x01(\t\"/\n\x0b\x41\x63knowledge\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xa0\x01\n\x14\x43ommunicationService\x12>\n\x0bSendMission\x12\x16.communication.Mission\x1a\x17.communication.response\x12H\n\x10SendStatusUpdate\x12\x1b.communication.StatusUpdate\x1a\x17.communication.responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ommunication.proto\x12\rcommunication\"1\n\x07Mission\x12\x10\n\x08\x64rone_id\x18\x01 \x01(\r\x12\x14\n\x0cmission_data\x18\x02 \x01(\t\"8\n\x0cStatusUpdate\x12\x10\n\x08\x64rone_id\x18\x01 \x01(\r\x12\x16\n\x0estatus_message\x18\x02 \x01(\t\"\x18\n\x08response\x12\x0c\n\x04text\x18\x01 \x01(\t\"=\n\x0b\x41\x63knowledge\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t2\xa0\x01\n\x14\x43ommunicationService\x12>\n\x0bSendMission\x12\x16.communication.Mission\x1a\x17.communication.response\x12H\n\x10SendStatusUpdate\x12\x1b.communication.StatusUpdate\x1a\x17.communication.responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -28,7 +28,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_RESPONSE']._serialized_start=147
   _globals['_RESPONSE']._serialized_end=171
   _globals['_ACKNOWLEDGE']._serialized_start=173
-  _globals['_ACKNOWLEDGE']._serialized_end=220
-  _globals['_COMMUNICATIONSERVICE']._serialized_start=223
-  _globals['_COMMUNICATIONSERVICE']._serialized_end=383
+  _globals['_ACKNOWLEDGE']._serialized_end=234
+  _globals['_COMMUNICATIONSERVICE']._serialized_start=237
+  _globals['_COMMUNICATIONSERVICE']._serialized_end=397
 # @@protoc_insertion_point(module_scope)
