@@ -5,9 +5,10 @@ import messages_pb2
 import messages_pb2_grpc
 
 class TextMessageService(messages_pb2_grpc.TextMessageServiceServicer):
-    def SendMessage(self, request, context):
-        response = messages_pb2.TextMessage()
-        response.text = "Server received: " + request.text
+    def ClientSendMessage(self, request, context):
+        print(f'server received: {request.text}')
+        response = messages_pb2.ResponseMessage()
+        response.text = "Server ack for: " + request.text
         return response
 
 def serve():
@@ -16,11 +17,7 @@ def serve():
     server.add_insecure_port('[::]:50051')
     server.start()
     print("Server started. Listening on port 50051.")
-    try:
-        while True:
-            time.sleep(86400)
-    except KeyboardInterrupt:
-        server.stop(0)
+    server.wait_for_termination()
 
 if __name__ == '__main__':
     serve()

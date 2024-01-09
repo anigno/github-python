@@ -14,8 +14,8 @@ class TextMessageServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SendMessage = channel.unary_unary(
-                '/grpc_example.TextMessageService/SendMessage',
+        self.ClientSendMessage = channel.unary_unary(
+                '/grpc_example.TextMessageService/ClientSendMessage',
                 request_serializer=messages__pb2.TextMessage.SerializeToString,
                 response_deserializer=messages__pb2.TextMessage.FromString,
                 )
@@ -24,7 +24,7 @@ class TextMessageServiceStub(object):
 class TextMessageServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SendMessage(self, request, context):
+    def ClientSendMessage(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +33,8 @@ class TextMessageServiceServicer(object):
 
 def add_TextMessageServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SendMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.SendMessage,
+            'ClientSendMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClientSendMessage,
                     request_deserializer=messages__pb2.TextMessage.FromString,
                     response_serializer=messages__pb2.TextMessage.SerializeToString,
             ),
@@ -49,7 +49,7 @@ class TextMessageService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SendMessage(request,
+    def ClientSendMessage(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +59,7 @@ class TextMessageService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/grpc_example.TextMessageService/SendMessage',
+        return grpc.experimental.unary_unary(request, target, '/grpc_example.TextMessageService/ClientSendMessage',
             messages__pb2.TextMessage.SerializeToString,
             messages__pb2.TextMessage.FromString,
             options, channel_credentials,

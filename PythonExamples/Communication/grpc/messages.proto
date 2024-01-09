@@ -6,6 +6,10 @@ message TextMessage {
   string text = 1;
 }
 
+message ResponseMessage{
+  string text=1;
+}
+
 service TextMessageService {
-  rpc SendMessage (TextMessage) returns (TextMessage);
+  rpc ClientSendMessage (TextMessage) returns (TextMessage);
 }

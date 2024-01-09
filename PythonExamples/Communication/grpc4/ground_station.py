@@ -1,21 +1,9 @@
-# communication_server.py
-
 import grpc
 from concurrent import futures
 import time
 import threading
 import communication_pb2
 import communication_pb2_grpc
-
-class Drone:
-    def __init__(self, drone_id, communication_service):
-        self.drone_id = drone_id
-        self.communication_service = communication_service
-
-    def send_status_update(self, status_message):
-        status_update = communication_pb2.StatusUpdate(drone_id=self.drone_id, status_message=status_message)
-        response = self.communication_service.SendStatusUpdate(status_update, None)  # Pass 'None' for the context
-        print(f"Status update sent from Drone {self.drone_id}: {response.text}")
 
 class GroundControl:
     def __init__(self, communication_service):
@@ -25,15 +13,6 @@ class GroundControl:
         mission = communication_pb2.Mission(drone_id=drone_id, mission_data=mission_data)
         response = self.communication_service.SendMission(mission, None)  # Pass 'None' for the context
         print(f"Mission sent to Drone {drone_id}: {response.text}")
-
-def simulate_drones(communication_service):
-    drone_1 = Drone(drone_id=1, communication_service=communication_service)
-    drone_2 = Drone(drone_id=2, communication_service=communication_service)
-
-    while True:
-        drone_1.send_status_update(status_message="Executing mission in Area A")
-        drone_2.send_status_update(status_message="Executing mission in Area B")
-        time.sleep(5)
 
 class CommunicationService(communication_pb2_grpc.CommunicationServiceServicer):
     def SendMission(self, request, context):
@@ -49,15 +28,11 @@ def run_server():
     communication_pb2_grpc.add_CommunicationServiceServicer_to_server(CommunicationService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-
-    # Start simulating drones in a separate thread
-    drone_simulation_thread = threading.Thread(target=simulate_drones, args=(CommunicationService(),))
-    drone_simulation_thread.start()
-    print("Server started on port 50051")
-
-    gc=GroundControl(CommunicationService())
-    gc.send_mission(1,'aaa')
-    server.wait_for_termination()
+    return server
 
 if __name__ == '__main__':
-    run_server()
+    server1 = run_server()
+    gc = GroundControl(CommunicationService())
+    gc.send_mission(1, 'aaa')
+
+    server1.wait_for_termination()
