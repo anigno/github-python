@@ -25,11 +25,12 @@ def run_ground_control_client():
 
         ground_control = GroundControl()
 
+
         # Ground Control sends a mission to UAV
         ground_control.send_mission(stub, "Explore Area A")
 
         # Ground Control sends a status to UAV
-        ground_control.send_status(stub, "37.7749", "-122.4194", "Waiting for instructions")
+        # ground_control.send_status(stub, "37.7749", "-122.4194", "Waiting for instructions")
 
 if __name__ == '__main__':
     run_ground_control_client()
