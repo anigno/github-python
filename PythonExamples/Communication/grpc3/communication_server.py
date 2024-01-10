@@ -17,14 +17,7 @@ class Drone:
         response = self.communication_service.SendStatusUpdate(status_update, None)  # Pass 'None' for the context
         print(f"Status update sent from Drone {self.drone_id}: {response.text}")
 
-class GroundControl:
-    def __init__(self, communication_service):
-        self.communication_service = communication_service
 
-    def send_mission(self, drone_id, mission_data):
-        mission = communication_pb2.Mission(drone_id=drone_id, mission_data=mission_data)
-        response = self.communication_service.SendMission(mission, None)  # Pass 'None' for the context
-        print(f"Mission sent to Drone {drone_id}: {response.text}")
 
 def simulate_drones(communication_service):
     drone_1 = Drone(drone_id=1, communication_service=communication_service)
