@@ -17,12 +17,12 @@ class CommunicationServiceStub(object):
         self.SendMission = channel.unary_unary(
                 '/communication.CommunicationService/SendMission',
                 request_serializer=communication__pb2.Mission.SerializeToString,
-                response_deserializer=communication__pb2.response.FromString,
+                response_deserializer=communication__pb2.Acknowledge.FromString,
                 )
-        self.SendStatusUpdate = channel.unary_unary(
-                '/communication.CommunicationService/SendStatusUpdate',
-                request_serializer=communication__pb2.StatusUpdate.SerializeToString,
-                response_deserializer=communication__pb2.response.FromString,
+        self.SendStatus = channel.unary_unary(
+                '/communication.CommunicationService/SendStatus',
+                request_serializer=communication__pb2.Status.SerializeToString,
+                response_deserializer=communication__pb2.Acknowledge.FromString,
                 )
 
 
@@ -35,7 +35,7 @@ class CommunicationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SendStatusUpdate(self, request, context):
+    def SendStatus(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -47,12 +47,12 @@ def add_CommunicationServiceServicer_to_server(servicer, server):
             'SendMission': grpc.unary_unary_rpc_method_handler(
                     servicer.SendMission,
                     request_deserializer=communication__pb2.Mission.FromString,
-                    response_serializer=communication__pb2.response.SerializeToString,
+                    response_serializer=communication__pb2.Acknowledge.SerializeToString,
             ),
-            'SendStatusUpdate': grpc.unary_unary_rpc_method_handler(
-                    servicer.SendStatusUpdate,
-                    request_deserializer=communication__pb2.StatusUpdate.FromString,
-                    response_serializer=communication__pb2.response.SerializeToString,
+            'SendStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendStatus,
+                    request_deserializer=communication__pb2.Status.FromString,
+                    response_serializer=communication__pb2.Acknowledge.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -77,12 +77,12 @@ class CommunicationService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/communication.CommunicationService/SendMission',
             communication__pb2.Mission.SerializeToString,
-            communication__pb2.response.FromString,
+            communication__pb2.Acknowledge.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def SendStatusUpdate(request,
+    def SendStatus(request,
             target,
             options=(),
             channel_credentials=None,
@@ -92,8 +92,8 @@ class CommunicationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/communication.CommunicationService/SendStatusUpdate',
-            communication__pb2.StatusUpdate.SerializeToString,
-            communication__pb2.response.FromString,
+        return grpc.experimental.unary_unary(request, target, '/communication.CommunicationService/SendStatus',
+            communication__pb2.Status.SerializeToString,
+            communication__pb2.Acknowledge.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

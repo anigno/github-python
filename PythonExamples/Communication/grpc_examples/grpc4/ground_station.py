@@ -1,7 +1,5 @@
 import grpc
 from concurrent import futures
-import time
-import threading
 import communication_pb2
 import communication_pb2_grpc
 

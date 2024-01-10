@@ -1,0 +1,24 @@
+// communication.proto
+
+syntax = "proto3";
+
+package communication;
+
+message Mission {
+  string mission_data = 1;
+}
+
+message Status {
+  string latitude = 1;
+  string longitude = 2;
+  string state = 3;
+}
+
+message Acknowledge {
+  string message = 1;
+}
+
+service CommunicationService {
+  rpc SendMission (Mission) returns (Acknowledge);
+  rpc SendStatus (Status) returns (Acknowledge);
+}
