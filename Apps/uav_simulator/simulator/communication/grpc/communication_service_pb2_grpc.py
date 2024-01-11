@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import uav_communicator_pb2 as uav__communicator__pb2
+import communication_service_pb2 as communication__service__pb2
 
 
 class CommunicationServiceStub(object):
@@ -14,28 +14,28 @@ class CommunicationServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SendStatusUpdate = channel.unary_unary(
-                '/UavCommunicator.CommunicationService/SendStatusUpdate',
-                request_serializer=uav__communicator__pb2.StatusUpdate.SerializeToString,
-                response_deserializer=uav__communicator__pb2.response.FromString,
+        self.StatusUpdateRequest = channel.unary_unary(
+                '/communication_service.CommunicationService/StatusUpdateRequest',
+                request_serializer=communication__service__pb2.pStatusUpdate.SerializeToString,
+                response_deserializer=communication__service__pb2.pResponse.FromString,
                 )
-        self.SendFlyToDestination = channel.unary_unary(
-                '/UavCommunicator.CommunicationService/SendFlyToDestination',
-                request_serializer=uav__communicator__pb2.FlyToDestination.SerializeToString,
-                response_deserializer=uav__communicator__pb2.response.FromString,
+        self.FlyToDestinationRequest = channel.unary_unary(
+                '/communication_service.CommunicationService/FlyToDestinationRequest',
+                request_serializer=communication__service__pb2.pFlyToDestination.SerializeToString,
+                response_deserializer=communication__service__pb2.pResponse.FromString,
                 )
 
 
 class CommunicationServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SendStatusUpdate(self, request, context):
+    def StatusUpdateRequest(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SendFlyToDestination(self, request, context):
+    def FlyToDestinationRequest(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -44,19 +44,19 @@ class CommunicationServiceServicer(object):
 
 def add_CommunicationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SendStatusUpdate': grpc.unary_unary_rpc_method_handler(
-                    servicer.SendStatusUpdate,
-                    request_deserializer=uav__communicator__pb2.StatusUpdate.FromString,
-                    response_serializer=uav__communicator__pb2.response.SerializeToString,
+            'StatusUpdateRequest': grpc.unary_unary_rpc_method_handler(
+                    servicer.StatusUpdateRequest,
+                    request_deserializer=communication__service__pb2.pStatusUpdate.FromString,
+                    response_serializer=communication__service__pb2.pResponse.SerializeToString,
             ),
-            'SendFlyToDestination': grpc.unary_unary_rpc_method_handler(
-                    servicer.SendFlyToDestination,
-                    request_deserializer=uav__communicator__pb2.FlyToDestination.FromString,
-                    response_serializer=uav__communicator__pb2.response.SerializeToString,
+            'FlyToDestinationRequest': grpc.unary_unary_rpc_method_handler(
+                    servicer.FlyToDestinationRequest,
+                    request_deserializer=communication__service__pb2.pFlyToDestination.FromString,
+                    response_serializer=communication__service__pb2.pResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'UavCommunicator.CommunicationService', rpc_method_handlers)
+            'communication_service.CommunicationService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -65,7 +65,7 @@ class CommunicationService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SendStatusUpdate(request,
+    def StatusUpdateRequest(request,
             target,
             options=(),
             channel_credentials=None,
@@ -75,14 +75,14 @@ class CommunicationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/UavCommunicator.CommunicationService/SendStatusUpdate',
-            uav__communicator__pb2.StatusUpdate.SerializeToString,
-            uav__communicator__pb2.response.FromString,
+        return grpc.experimental.unary_unary(request, target, '/communication_service.CommunicationService/StatusUpdateRequest',
+            communication__service__pb2.pStatusUpdate.SerializeToString,
+            communication__service__pb2.pResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def SendFlyToDestination(request,
+    def FlyToDestinationRequest(request,
             target,
             options=(),
             channel_credentials=None,
@@ -92,8 +92,8 @@ class CommunicationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/UavCommunicator.CommunicationService/SendFlyToDestination',
-            uav__communicator__pb2.FlyToDestination.SerializeToString,
-            uav__communicator__pb2.response.FromString,
+        return grpc.experimental.unary_unary(request, target, '/communication_service.CommunicationService/FlyToDestinationRequest',
+            communication__service__pb2.pFlyToDestination.SerializeToString,
+            communication__service__pb2.pResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
