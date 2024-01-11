@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+message DroneUpdate {
+  string drone_id = 1;
+  string update_data=2;
+}
+
+// mission.proto
+message Mission {
+  string drone_id = 1;
+  string mission_data=2;
+  // Add other mission-related fields
+}
+
+message Response{
+  string text=1;
+}
+// communication_service.proto
+service CommunicationService {
+  rpc SendDroneUpdate(stream DroneUpdate) returns (Response);
+  rpc SendMission(Mission) returns (Response);
+}
