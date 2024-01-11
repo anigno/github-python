@@ -17,7 +17,6 @@ from common.crc.crc_providers import CrcProvider32Bit
 from common.generic_event import GenericEvent
 from common.printable_params import PrintableParams
 from communication.udp.serializers.pickle_message_serializer import PickleMessageSerializer
-from communication.udp.udp_communication_manager import UdpCommunicationManager
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)

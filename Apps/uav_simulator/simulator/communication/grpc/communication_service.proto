@@ -18,13 +18,21 @@ message pDirection3d{
   double azimuth=10;
   double elevation=20;
 }
+
+message pCapabilityData{
+  string descriptor=10;
+  bytes data=20;
+}
+
 message pUavStatus{
   pLocation3d location=10;
   pDirection3d direction=20;
   double velocity=30;
   uint32 remaining_flight_time=40;
   FlightState flight_state=50;
+  repeated pCapabilityData capability_data=60;
 }
+
 message pFlyToDestination {
   uint32 message_id=1;
   uint32 mission_id=10;
