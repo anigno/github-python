@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import messages_pb2 as messages__pb2
+import calculation_service_pb2 as calculation__service__pb2
 
 
-class TextMessageServiceStub(object):
+class CalculateServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -14,42 +14,42 @@ class TextMessageServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ClientSendMessage = channel.unary_unary(
-                '/grpc_example.TextMessageService/ClientSendMessage',
-                request_serializer=messages__pb2.TextMessage.SerializeToString,
-                response_deserializer=messages__pb2.TextMessage.FromString,
+        self.calculate_square_root = channel.unary_unary(
+                '/grpc_example.CalculateService/calculate_square_root',
+                request_serializer=calculation__service__pb2.RequestMessage.SerializeToString,
+                response_deserializer=calculation__service__pb2.ResponseMessage.FromString,
                 )
 
 
-class TextMessageServiceServicer(object):
+class CalculateServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def ClientSendMessage(self, request, context):
+    def calculate_square_root(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_TextMessageServiceServicer_to_server(servicer, server):
+def add_CalculateServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ClientSendMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.ClientSendMessage,
-                    request_deserializer=messages__pb2.TextMessage.FromString,
-                    response_serializer=messages__pb2.TextMessage.SerializeToString,
+            'calculate_square_root': grpc.unary_unary_rpc_method_handler(
+                    servicer.calculate_square_root,
+                    request_deserializer=calculation__service__pb2.RequestMessage.FromString,
+                    response_serializer=calculation__service__pb2.ResponseMessage.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'grpc_example.TextMessageService', rpc_method_handlers)
+            'grpc_example.CalculateService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class TextMessageService(object):
+class CalculateService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def ClientSendMessage(request,
+    def calculate_square_root(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class TextMessageService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/grpc_example.TextMessageService/ClientSendMessage',
-            messages__pb2.TextMessage.SerializeToString,
-            messages__pb2.TextMessage.FromString,
+        return grpc.experimental.unary_unary(request, target, '/grpc_example.CalculateService/calculate_square_root',
+            calculation__service__pb2.RequestMessage.SerializeToString,
+            calculation__service__pb2.ResponseMessage.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

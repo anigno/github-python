@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package grpc_example;
+
+message RequestMessage {
+  string sender_id = 1;
+  double number = 2;
+}
+
+message ResponseMessage{
+  double result=1;
+}
+
+service CalculateService {
+  rpc calculate_square_root (RequestMessage) returns (ResponseMessage);
+}
