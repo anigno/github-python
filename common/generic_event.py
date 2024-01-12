@@ -1,4 +1,5 @@
 from collections import namedtuple
+from threading import Thread
 
 class GenericEvent:
     """
@@ -15,6 +16,15 @@ class GenericEvent:
             raise Exception(f'event types mismatch. expected type: {self.args_type} but received type: {type(data)}')
         for handler in self._handlers:
             handler(data)
+
+    def raise_event_async(self, data: any):
+        if not issubclass(type(data), self.args_type):
+            raise Exception(f'event types mismatch. expected type: {self.args_type} but received type: {type(data)}')
+        Thread(target=self.raise_events_thread_start, args=[data]).start()
+
+    def raise_events_thread_start(self, args):
+        for handler in self._handlers:
+            handler(args)
 
     def register(self, handler):
         self._handlers.append(handler)
@@ -41,14 +51,19 @@ class GenericEvent:
 
 if __name__ == '__main__':
     class MyEventArgsClass:
-        pass
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return f'MyEventArgsClass: {self.value}'
 
     def event_handler(data: MyEventArgsClass):
         print('event handler', data)
 
     my_event = GenericEvent(MyEventArgsClass, 'my event descriptor')
     my_event += event_handler
-    my_event.raise_event(MyEventArgsClass())
+    my_event.raise_event(MyEventArgsClass('sync'))
+    my_event.raise_event_async(MyEventArgsClass('async'))
     try:
         my_event.raise_event(123)
     except Exception as ex:
