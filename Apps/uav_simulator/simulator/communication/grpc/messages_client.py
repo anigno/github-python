@@ -12,6 +12,7 @@ class MessagesClient:
     def __init__(self, logger: Logger, ip, port):
         self.logger = logger
         self.channel = grpc.insecure_channel(f'{ip}:{port}')
+        # self.channel = grpc.secure_channel(f'{ip}:{port}', grpc.ssl_server_credentials(()))
         self.stub = communication_service_pb2_grpc.CommunicationServiceStub(self.channel)
 
     def send_status_update_request(self, message_id, uav_descriptor, uav_status):

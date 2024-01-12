@@ -33,6 +33,7 @@ class MessagesServer(CommunicationServiceServicer):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         communication_service_pb2_grpc.add_CommunicationServiceServicer_to_server(self, server)
         server.add_insecure_port(f'{self.ip}:{self.port}')
+        # server.add_secure_port(f'{self.ip}:{self.port}',grpc.ssl_server_credentials(()))
         self.logger.debug("Communication Service Server started on port 50052")
         server.start()
         server.wait_for_termination()
