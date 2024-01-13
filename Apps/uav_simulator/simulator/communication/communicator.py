@@ -3,6 +3,7 @@ from logging import Logger
 from Apps.uav_simulator.simulator.communication.grpc.messages_server import GrpcMessagesServer
 from Apps.uav_simulator.simulator.communication.uav_grpc_clients_store import UavGrpcClientsStore
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
+from common.generic_event import GenericEvent
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 import pStatusUpdate, pFlyToDestination, \
     pResponse, pUavStatus, pLocation3d, \
@@ -24,13 +25,15 @@ class GroundControlCommunicator:
         self.gc_port = gc_port
         self.uav_comm_data = UavGrpcClientsStore(self.logger)
         self.server = GrpcMessagesServer(logger, gc_ip, gc_port)
-        self.server.on_StatusUpdateRequest += self.on_status_update_requested
+        self.on_uav_status_receive = GenericEvent(StatusUpdate)
+        self.server.on_StatusUpdateRequest += self._on_status_update_received
 
     def start(self):
         self.server.start()
 
-    def on_status_update_requested(self, status: pStatusUpdate):
-        pass
+    def _on_status_update_received(self, proto_status: pStatusUpdate):
+        status_update = StatusUpdate()
+        self.on_uav_status_receive.raise_event(status_update)
 
     def fly_to_destination(self, uav_descriptor: str, mission_id: int, location: Location3d):
         message_id = GroundControlCommunicator.get_uniqueu_id()
