@@ -1,11 +1,7 @@
 import logging
-from abc import ABC, abstractmethod
 from logging import Logger
-from typing import Dict, Tuple
-from communication_service_pb2 import pStatusUpdate, pFlyToDestination, pResponse
-from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2_grpc import CommunicationService
-from Apps.uav_simulator.simulator.communication.grpc.messages_client import GrpcMessagesClient
 from Apps.uav_simulator.simulator.communication.grpc.messages_server import GrpcMessagesServer
+from Apps.uav_simulator.simulator.communication.uav_grpc_clients_store import UavGrpcClientsStore
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class StatusUpdate:
@@ -14,30 +10,15 @@ class StatusUpdate:
 class FlyToDestinationData:
     pass
 
-class UavGrpcCommunicationData:
-    def __init__(self):
-        self.uav_comm_data: Dict[str, GrpcMessagesClient] = {}
-
-    def add_update_uav_comm_data(self, descriptor: str, uav_ip: str, uav_port: int):
-        client = GrpcMessagesClient(logger, uav_ip, uav_port)
-        self.uav_comm_data[descriptor] = client
-
-    def remove_uav_comm_data(self, descriptor: str):
-        del (self.uav_comm_data[descriptor])
-
-    def get_uav_comm_data(self) -> Dict[str, GrpcMessagesClient]:
-        return self.uav_comm_data.copy()
-
 class GroundControlCommunicator:
-    """receives messages from all UAVs, and sends specific message to specific uav.
-    exposes application data types from messages"""
+    """receives messages from all UAVs, and sends specific message to specific uav."""
 
     def __init__(self, logger: Logger, communicator_id: str, gc_ip: str, gc_port: int):
         self.logger = logger
         self.communicator_id = communicator_id
         self.gc_ip = gc_ip
         self.gc_port = gc_port
-        self.uav_comm_data = UavGrpcCommunicationData()
+        self.uav_comm_data = UavGrpcClientsStore()
         self.server = GrpcMessagesServer(logger, gc_ip, gc_port)
         self.server.on_StatusUpdateRequest += self.on_status_update_requested
 
