@@ -1,28 +1,31 @@
 import logging
 from logging import Logger
 from typing import Dict
-
 from Apps.uav_simulator.simulator.communication.grpc.messages_client import GrpcMessagesClient
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
-import grpc
+
 class UavGrpcClientsStore:
-    """store clients grpc client data"""
+    """store grpc clients"""
 
     def __init__(self, logger: Logger):
         self._logger = logger
-        self._uav_comm_data: Dict[str, GrpcMessagesClient] = {}
+        self._clients_dict: Dict[str, GrpcMessagesClient] = {}
 
-    def add_update_uav_comm_data(self, descriptor: str, uav_ip: str, uav_port: int):
+    def add_update_uav_comm_data(self, descriptor: str, uav_ip: str, uav_port: int) -> GrpcMessagesClient:
+        ret = None
+        if descriptor in self._clients_dict:
+            ret = self._clients_dict[descriptor]
         client = GrpcMessagesClient(self._logger, uav_ip, uav_port)
-        self._uav_comm_data[descriptor] = client
+        self._clients_dict[descriptor] = client
+        return ret
 
     def remove_uav_comm_data(self, descriptor: str) -> GrpcMessagesClient:
-        client = self._uav_comm_data[descriptor]
-        del (self._uav_comm_data[descriptor])
+        client = self._clients_dict[descriptor]
+        del (self._clients_dict[descriptor])
         return client
 
     def get_uav_comm_data(self) -> Dict[str, GrpcMessagesClient]:
-        return self._uav_comm_data.copy()
+        return self._clients_dict.copy()
 
 if __name__ == '__main__':
     logger1: Logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)

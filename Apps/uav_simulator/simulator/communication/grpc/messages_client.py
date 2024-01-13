@@ -1,9 +1,9 @@
 import logging
 from logging import Logger
 import grpc
-import communication_service_pb2_grpc
-import communication_service_pb2
-from communication_service_pb2 import pStatusUpdate, pFlyToDestination, pResponse, pUavStatus, pLocation3d, \
+from Apps.uav_simulator.simulator.communication.grpc import communication_service_pb2_grpc
+from Apps.uav_simulator.simulator.communication.grpc import communication_service_pb2
+from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 import pStatusUpdate, pFlyToDestination, pResponse, pUavStatus, pLocation3d, \
     pDirection3d, FlightState, pCapabilityData
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 

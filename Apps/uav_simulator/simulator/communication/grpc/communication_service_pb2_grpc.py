@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import communication_service_pb2 as communication__service__pb2
+from Apps.uav_simulator.simulator.communication.grpc import communication_service_pb2 as communication__service__pb2
 
 
 class CommunicationServiceStub(object):

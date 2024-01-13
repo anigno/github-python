@@ -5,8 +5,8 @@ import grpc
 from concurrent import futures
 from Apps.uav_simulator.simulator.communication.grpc import communication_service_pb2_grpc
 from common.generic_event import GenericEvent
-from communication_service_pb2 import pStatusUpdate, pFlyToDestination, pResponse
-from communication_service_pb2_grpc import CommunicationServiceServicer, add_CommunicationServiceServicer_to_server
+from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 import pStatusUpdate, pFlyToDestination, pResponse
+from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2_grpc import CommunicationServiceServicer, add_CommunicationServiceServicer_to_server
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class GrpcMessagesServer(CommunicationServiceServicer):

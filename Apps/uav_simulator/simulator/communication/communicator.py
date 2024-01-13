@@ -2,7 +2,11 @@ import logging
 from logging import Logger
 from Apps.uav_simulator.simulator.communication.grpc.messages_server import GrpcMessagesServer
 from Apps.uav_simulator.simulator.communication.uav_grpc_clients_store import UavGrpcClientsStore
+from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
+from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 import pStatusUpdate, pFlyToDestination, \
+    pResponse, pUavStatus, pLocation3d, \
+    pDirection3d, FlightState, pCapabilityData
 
 class StatusUpdate:
     pass
@@ -18,7 +22,7 @@ class GroundControlCommunicator:
         self.communicator_id = communicator_id
         self.gc_ip = gc_ip
         self.gc_port = gc_port
-        self.uav_comm_data = UavGrpcClientsStore()
+        self.uav_comm_data = UavGrpcClientsStore(self.logger)
         self.server = GrpcMessagesServer(logger, gc_ip, gc_port)
         self.server.on_StatusUpdateRequest += self.on_status_update_requested
 
@@ -37,4 +41,4 @@ if __name__ == '__main__':
     logger1: Logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
     LoggingInitiatorByCode()
 
-    c = Communicator(logger1, 'GC', '127.0.0.1', 10000)
+    c = GroundControlCommunicator(logger1, 'GC', '127.0.0.1', 10000)
