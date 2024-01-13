@@ -9,7 +9,7 @@ from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpCommunicatorWithCrc(UdpCommunicator):
-
+    """sends and receives data with crc confirmation"""
     def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase):
         super().__init__(local_ip, local_port)
         self.crc_provider = crc_provider
