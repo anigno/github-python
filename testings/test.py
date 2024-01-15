@@ -6,13 +6,18 @@ b, c = struct.unpack('ip', a)
 print(b)
 print(c.decode())
 
-d = {}
-d[1] = 111
-d[2] = 333
-print(d)
-e = d[1]
-del (d[1])
-print(d)
-print(e)
-del (e)
-print(e)
+
+import json
+
+class SomeData:
+    def __init__(self):
+        self.name = 'abc'
+        self.data = [1, 2, 3]
+
+# Create an instance of the SomeData class
+some_data_instance = SomeData()
+
+# Convert the instance to a JSON string
+json_string = json.dumps(some_data_instance.__dict__)
+
+print(json_string)

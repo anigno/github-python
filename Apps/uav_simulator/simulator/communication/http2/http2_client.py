@@ -3,12 +3,11 @@ import json
 from http.client import HTTPResponse
 
 from Apps.uav_simulator.simulator.communication.http2.http2_base_type import Http2BaseType
+from BL.meta_classes.no_instance_meta import NoInstanceMeta
 
-class Http2Client:
-    def __init__(self):
-        pass
-
-    def send_request(self, instance: Http2BaseType, ip, port, path='/') -> HTTPResponse:
+class Http2Client(metaclass=NoInstanceMeta):
+    @staticmethod
+    def send_request(instance: Http2BaseType, ip, port, path='/') -> HTTPResponse:
         as_json = json.dumps(instance.__dict__)
         conn = http.client.HTTPConnection(ip, port)
         headers = {
@@ -25,8 +24,7 @@ if __name__ == '__main__':
     class SomeData:
         def __init__(self):
             self.name = 'abc'
-            self.age = 32
+            self.data = [1, 2, 3]
 
-    c = Http2Client()
-    r = c.send_request(SomeData(), 'localhost', 1000)
+    r = Http2Client.send_request(SomeData(), 'localhost', 1000)
     print(r.read().decode('utf-8'))
