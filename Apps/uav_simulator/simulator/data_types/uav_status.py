@@ -16,3 +16,7 @@ class UavStatus:
         self.direction = Direction3d()
         self.remaining_flight_time = 0
         self.flight_mode = FlightMode.IDLE
+
+
+
+

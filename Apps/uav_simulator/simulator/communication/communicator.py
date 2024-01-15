@@ -1,19 +1,11 @@
 import logging
 from logging import Logger
-from Apps.uav_simulator.simulator.communication.grpc.messages_server import GrpcMessagesServer
-from Apps.uav_simulator.simulator.communication.uav_grpc_clients_store import UavGrpcClientsStore
+from typing import Dict
+
+from Apps.uav_simulator.simulator.communication.channel_base import ChannelBase
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from common.generic_event import GenericEvent
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
-from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 import pStatusUpdate, pFlyToDestination, \
-    pResponse, pUavStatus, pLocation3d, \
-    pDirection3d, FlightState, pCapabilityData
-
-class StatusUpdate:
-    pass
-
-class FlyToDestinationData:
-    pass
 
 class GroundControlCommunicator:
     """receives messages from all UAVs, and sends specific message to specific uav."""
@@ -23,7 +15,7 @@ class GroundControlCommunicator:
         self.communicator_id = communicator_id
         self.gc_ip = gc_ip
         self.gc_port = gc_port
-        self.uav_comm_data = UavGrpcClientsStore(self.logger)
+        self.uav_channels: Dict[ChannelBase] = {}
         self.server = GrpcMessagesServer(logger, gc_ip, gc_port)
         self.on_uav_status_receive = GenericEvent(StatusUpdate)
         self.server.on_StatusUpdateRequest += self._on_status_update_received
