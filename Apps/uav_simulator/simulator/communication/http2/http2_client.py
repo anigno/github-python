@@ -10,8 +10,13 @@ class Http2Client(metaclass=NoInstanceMeta):
     def send_request(instance: Http2BaseType, ip, port, path='/') -> HTTPResponse:
         as_json = json.dumps(instance.__dict__)
         conn = http.client.HTTPConnection(ip, port)
+        # headers = {
+        #     'Content-Type': 'application/json',
+        #     'Connection': 'Upgrade',
+        #     'Upgrade': 'h2c',
+        # }
         headers = {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/octet-stream',
             'Connection': 'Upgrade',
             'Upgrade': 'h2c',
         }
@@ -26,5 +31,10 @@ if __name__ == '__main__':
             self.name = 'abc'
             self.data = [1, 2, 3]
 
-    r = Http2Client.send_request(SomeData(), 'localhost', 1000)
+    class SomeClass2:
+        def __init__(self):
+            self.b = 123456
+            self.c = SomeData()
+
+    r = Http2Client.send_request(SomeClass2(), 'localhost', 1000)
     print(r.read().decode('utf-8'))
