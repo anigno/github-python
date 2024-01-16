@@ -7,10 +7,10 @@ from threading import RLock
 from common.printable_params import PrintableParams
 
 class MessageTypeEnum(Enum):
-    BASE = 0
-    STATUS_UPDATE = 1
-    CAPABILITIES_UPDATE = 2
-    FLY_TO_DESTINATION = 3
+    BASE = 100
+    STATUS_UPDATE = 101
+    CAPABILITIES_UPDATE = 102
+    FLY_TO_DESTINATION = 103
 
 class MessageBase(ABC):
     """base class for messages, uses pickle serialization"""
@@ -30,6 +30,8 @@ class MessageBase(ABC):
     def from_buffer(self, buffer: bytes):
         self.__dict__ = pickle.loads(buffer).__dict__
 
+    def __str__(self):
+        return f'[{type(self)}: {self.message_id} {self.send_time}]\n'
 if __name__ == '__main__':
     class Message1(MessageBase):
         MESSAGE_TYPE = 2222
