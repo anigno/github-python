@@ -1,23 +1,23 @@
 from abc import ABC
 from threading import RLock
 
-class MessageBase(ABC):
+class UdpMessageBase(ABC):
     """base class for all messages used by message communicator"""
     MESSAGE_TYPE = 100
     _unique_id_counter = 1000
     _unique_id_locker = RLock()
 
     def __init__(self):
-        with MessageBase._unique_id_locker:
-            self.message_id = MessageBase._unique_id_counter
-            MessageBase._unique_id_counter += 1
+        with UdpMessageBase._unique_id_locker:
+            self.message_id = UdpMessageBase._unique_id_counter
+            UdpMessageBase._unique_id_counter += 1
         self.sent_time: int = 0
 
 if __name__ == '__main__':
     from threading import Thread
     import time
 
-    class SomeMessage(MessageBase):
+    class SomeMessage(UdpMessageBase):
         def __init__(self):
             super().__init__()
             self.data = 'abc'

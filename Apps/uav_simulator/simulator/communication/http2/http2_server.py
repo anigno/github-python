@@ -5,6 +5,7 @@ from BL.meta_classes.no_instance_meta import NoInstanceMeta
 from common.generic_event import GenericEvent
 
 class Http2Server(metaclass=NoInstanceMeta):
+    """receive json POST request and raise an event with dict data"""
     on_request_post_received = GenericEvent(dict)
 
     @staticmethod
@@ -27,6 +28,5 @@ if __name__ == '__main__':
     def on_request_post_received(data_dict: dict):
         # uav_status_instance = UavStatus(**uav_status_dict)
         print(data_dict)
-
     Http2Server.on_request_post_received += on_request_post_received
     Http2Server.start('localhost', 1000)
