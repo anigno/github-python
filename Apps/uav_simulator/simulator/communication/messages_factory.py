@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Callable
 
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
 
@@ -11,6 +11,6 @@ class MessagesFactory:
 
     def create_message_instance(self, message_type_value: int, message_data_bytes: bytes) -> MessageBase:
         message_type = self._messages_dict[message_type_value]
-        instance: MessageBase = message_type()
+        instance: MessageBase = message_type.__call__()
         instance.from_buffer(message_data_bytes)
         return instance
