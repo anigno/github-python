@@ -1,0 +1,81 @@
+import logging
+import time
+from enum import Enum
+from http.client import HTTPResponse
+from logging import Logger
+
+from Apps.uav_simulator.simulator.communication.http2.http2_client import Http2Client
+from Apps.uav_simulator.simulator.communication.http2.http2_server import Http2Server
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactory
+from common.generic_event import GenericEvent
+from common.printable_params import PrintableParams
+from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
+
+class Http2Communicator:
+    """sends and receives messages based on MessageBase, using http2 client and server"""
+
+    def __init__(self, logger: Logger, messages_factory: MessagesFactory, local_ip: str, local_port: int):
+        self.logger = logger
+        self.messages_factory = messages_factory
+        self.local_ip = local_ip
+        self.local_port = local_port
+        self.server = Http2Server
+        self.client = Http2Client
+        self.on_message_receive = GenericEvent(MessageBase)
+        self.server.on_request_post_received += self._on_request_post_received
+
+    def start(self):
+        self.server.start(self.local_ip, self.local_port)
+
+    def send_message(self, message: MessageBase, ip, port) -> HTTPResponse:
+        message.send_time = time.time()
+        message_bytes = message.to_buffer()
+        message_type_bytes = message.MESSAGE_TYPE.value.to_bytes(2, 'big', signed=False)
+        message_bytes = message_type_bytes + message_bytes
+        response = self.client.send_data_request(message_bytes, ip, port)
+        return response
+
+    def _on_request_post_received(self, data_bytes: bytes):
+        message_type_value = int.from_bytes(data_bytes[0:2], 'big', signed=False)
+        message = self.messages_factory.create_message_instance(message_type_value, data_bytes[2:])
+        self.on_message_receive.raise_event(message)
+
+if __name__ == '__main__':
+    from threading import Thread
+
+    logger1: Logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
+    LoggingInitiatorByCode()
+
+    class MessagesEnumTest(Enum):
+        TEST_ENUM = 2222
+
+    class TestMessage(MessageBase):
+        MESSAGE_TYPE = MessagesEnumTest.TEST_ENUM
+
+        def __init__(self):
+            super().__init__()
+            self.data = 'hello'
+
+    mf = MessagesFactory()
+    mf.register_message(TestMessage)
+
+    def comm1_on_message_received(message):
+        PrintableParams.print(message,header='* received')
+
+    def comm1_start():
+        comm1 = Http2Communicator(logger1, mf, 'localhost', 1001)
+        comm1.on_message_receive += comm1_on_message_received
+        comm1.start()
+
+    def comm2_start():
+        comm2 = Http2Communicator(logger1, mf, 'localhost', 1002)
+        m = TestMessage()
+        PrintableParams.print(m, header='+ sent')
+        comm2.send_message(m, 'localhost', 1001)
+        m = TestMessage()
+        PrintableParams.print(m, header='sent')
+        comm2.send_message(m, 'localhost', 1001)
+
+    Thread(target=comm1_start).start()
+    Thread(target=comm2_start).start()

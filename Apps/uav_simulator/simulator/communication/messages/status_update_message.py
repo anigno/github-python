@@ -1,4 +1,4 @@
-from Apps.uav_simulator.simulator.communication.http2.messages.message_base import MessageBase, MessageTypeEnum
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
 
 class StatusUpdateMessage(MessageBase):
     MESSAGE_TYPE = MessageTypeEnum.STATUS_UPDATE
