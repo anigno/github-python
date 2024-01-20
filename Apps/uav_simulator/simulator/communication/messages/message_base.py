@@ -49,10 +49,10 @@ if __name__ == '__main__':
     m1 = Message1()
     m1.send_time = time.time()
     PrintableParams.print(m1, True)
-    buffer = m1.to_buffer()
+    buffer1 = m1.to_buffer()
 
     m2 = Message1()
-    m2.from_buffer(buffer)
+    m2.from_buffer(buffer1)
     PrintableParams.print(m2, True)
 
     assert m1.message_id == m2.message_id

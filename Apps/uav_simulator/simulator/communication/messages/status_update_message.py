@@ -10,6 +10,8 @@ class StatusUpdateMessage(MessageBase):
     def __init__(self):
         super().__init__()
         self.uav_descriptor: str = ''
+        self.uav_local_ip = ''
+        self.uav_local_port = -1
         self.uav_status: UavStatus = UavStatus()
 
     def __str__(self):
@@ -21,6 +23,8 @@ class StatusUpdateMessage(MessageBase):
             'message_id': self.message_id,
             'send_time': self.send_time,
             # from derived
+            'uav_local_ip': self.uav_local_ip,
+            'uav_local_port': self.uav_local_port,
             'status_location': [self.uav_status.location.x,
                                 self.uav_status.location.y,
                                 self.uav_status.location.h],
@@ -39,6 +43,8 @@ class StatusUpdateMessage(MessageBase):
         self.message_id = message_dict['message_id']
         self.send_time = message_dict['send_time']
         # from derived
+        self.uav_local_ip = message_dict['uav_local_ip']
+        self.uav_local_port = message_dict['uav_local_port']
         self.uav_status.location = Location3d(message_dict['status_location'][0],
                                               message_dict['status_location'][1],
                                               message_dict['status_location'][2])
@@ -52,6 +58,8 @@ class StatusUpdateMessage(MessageBase):
 
 if __name__ == '__main__':
     s1 = StatusUpdateMessage()
+    s1.uav_local_ip = '22.22.22.22'
+    s1.uav_local_port = 4444
     s1.send_time = 12345678.1234
     s1.uav_descriptor = 'uav01'
     s1.uav_status.location = Location3d(1, 2, 3)
@@ -66,3 +74,4 @@ if __name__ == '__main__':
 
     assert s1.uav_status.flight_mode == s2.uav_status.flight_mode
     assert s1.uav_status.location.y == s2.uav_status.location.y
+    assert s1.uav_local_ip == s2.uav_local_ip

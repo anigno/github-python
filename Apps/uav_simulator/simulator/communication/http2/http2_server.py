@@ -17,6 +17,7 @@ class Http2Server(metaclass=NoInstanceMeta):
         def do_POST(self):
             content_length = int(self.headers['Content-Length'])
             post_data_bytes = self.rfile.read(content_length)
+            #sender_ip, sender_port = self.client_address
             Http2Server.on_request_post_received.raise_event(post_data_bytes)
             # Send a response (optional)
             self.send_response(200)
