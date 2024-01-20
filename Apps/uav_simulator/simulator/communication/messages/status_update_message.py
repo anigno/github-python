@@ -17,8 +17,10 @@ class StatusUpdateMessage(MessageBase):
 
     def to_buffer(self) -> bytes:
         message_dict = {
+            # from base
             'message_id': self.message_id,
             'send_time': self.send_time,
+            # from derived
             'status_location': [self.uav_status.location.x,
                                 self.uav_status.location.y,
                                 self.uav_status.location.h],
@@ -33,8 +35,10 @@ class StatusUpdateMessage(MessageBase):
 
     def from_buffer(self, buffer: bytes):
         message_dict = msgpack.loads(buffer)
+        # from base
         self.message_id = message_dict['message_id']
         self.send_time = message_dict['send_time']
+        # from derived
         self.uav_status.location = Location3d(message_dict['status_location'][0],
                                               message_dict['status_location'][1],
                                               message_dict['status_location'][2])
