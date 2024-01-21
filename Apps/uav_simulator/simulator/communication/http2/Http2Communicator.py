@@ -57,18 +57,24 @@ if __name__ == '__main__':
             super().__init__()
             self.data = 'hello'
 
-    mf = MessagesFactory()
-    mf.register_message(TestMessage)
+    class MessagesFactoryMock(MessagesFactory):
+        def init_messages(self):
+            self.register_message(TestMessage)
+
+        def __init__(self, logger):
+            super().__init__(logger)
+
+    mf = MessagesFactoryMock(logger1)
 
     def comm1_on_message_received(message):
-        PrintableParams.print(message,header='* received')
+        PrintableParams.print(message, header='* received')
 
-    def comm1_start():
+    def server_comm_start():
         comm1 = Http2Communicator(logger1, mf, 'localhost', 1001)
         comm1.on_message_receive += comm1_on_message_received
         comm1.start()
 
-    def comm2_start():
+    def client_comm_start():
         comm2 = Http2Communicator(logger1, mf, 'localhost', 1002)
         m = TestMessage()
         PrintableParams.print(m, header='+ sent')
@@ -77,5 +83,5 @@ if __name__ == '__main__':
         PrintableParams.print(m, header='sent')
         comm2.send_message(m, 'localhost', 1001)
 
-    Thread(target=comm1_start).start()
-    Thread(target=comm2_start).start()
+    Thread(target=server_comm_start).start()
+    Thread(target=client_comm_start).start()
