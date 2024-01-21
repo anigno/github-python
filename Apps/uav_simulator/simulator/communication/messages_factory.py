@@ -1,8 +1,9 @@
-from typing import Dict, Callable
+from abc import ABC, abstractmethod
+from typing import Dict
 
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
 
-class MessagesFactory:
+class MessagesFactory(ABC):
     def __init__(self):
         self._messages_dict: Dict[int, MessageBase] = {}
 
@@ -14,3 +15,8 @@ class MessagesFactory:
         instance: MessageBase = message_type.__call__()
         instance.from_buffer(message_data_bytes)
         return instance
+
+    @abstractmethod
+    def init_messages(self):
+        pass
+
