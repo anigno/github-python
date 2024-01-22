@@ -6,7 +6,7 @@ from Apps.uav_simulator.simulator.communication.messages.capabilities_update_mes
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
 from Apps.uav_simulator.simulator.communication.messages.status_update_message import StatusUpdateMessage
-from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactory
+from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.specialized_communicator_base import SpecializedCommunicatorBase
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode
@@ -15,7 +15,7 @@ from common.generic_event import GenericEvent
 class GroundControlCommunicator(SpecializedCommunicatorBase):
     """handle receiving UAVs messages and send flight missions to UAVs, manage uav addressbook"""
 
-    def __init__(self, logger: Logger, messages_factory: MessagesFactory, local_ip, local_port):
+    def __init__(self, logger: Logger, messages_factory: MessagesFactoryBase, local_ip, local_port):
         super().__init__(logger, messages_factory, local_ip, local_port)
         self.on_uav_status_updated = GenericEvent(StatusUpdateMessage)
         self.on_capabilities_updated = GenericEvent(CapabilitiesUpdateMessage)

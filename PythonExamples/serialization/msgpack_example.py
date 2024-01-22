@@ -43,4 +43,4 @@ loaded_family_instance = Family.from_msgpack(loaded_data)
 
 # Access the loaded instance
 for person in loaded_family_instance.members:
-    print(f"Name: {person.name}, Age: {person.age}")
+    print(f"Name: {person.uav_descriptor}, Age: {person.age}")

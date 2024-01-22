@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
 
-class MessagesFactory(ABC):
+class MessagesFactoryBase(ABC):
     def __init__(self, logger: Logger):
         self._messages_dict: Dict[int, MessageBase] = {}
         self.logger = logger

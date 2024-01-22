@@ -2,51 +2,55 @@ import logging
 import time
 from threading import Thread, RLock
 from typing import Optional, List
+
 from Apps.uav_simulator.simulator.capabilities.camera_simulation_capability import CameraSimulationCapability
 from Apps.uav_simulator.simulator.capabilities.capability_base import CapabilityBase
+from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
+from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
+from Apps.uav_simulator.simulator.communication.uav_communicator import UavCommunicator
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
-from Apps.uav_simulator.simulator.event_args.update_event_args import UpdateEventArgs
-from Apps.uav_simulator.simulator.messages.acknowledge_message import AcknowledgeMessage
-from Apps.uav_simulator.simulator.messages.fly_to_destination_message import FlyToDestinationMessage
-from Apps.uav_simulator.simulator.messages.ground_control_update_message import GroundControlUpdateMessage
-from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
-from Apps.uav_simulator.simulator.messages.return_to_home_message import ReturnToHomeMessage
-from common.crc.crc_providers import CrcProvider32Bit
-from common.generic_event import GenericEvent
+from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
+from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from common.printable_params import PrintableParams
-from communication.udp.serializers.pickle_message_serializer import PickleMessageSerializer
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class SimpleUavManager:
-    MESSAGES_READ_INTERVAL = 0.5
+    """manage the Uav operations and messaging
+        Attributes:
+            uav_params (UavParams): uav configuration params
+            uav_status (UavStatus): uav updated location, direction etc.
+    """
+    LOCATION_CALCULATION_INTERVAL = 0.1
 
-    def __init__(self, uav_params: UavParams, location: Location3d, capabilities: List[CapabilityBase]):
-        logger.info(f'{uav_params}')
+    def __init__(self, uav_params: UavParams, home_location: Location3d, capabilities: List[CapabilityBase],
+                 communicator: UavCommunicator):
+        logger.info(f'\n{uav_params}\n')
         self.uav_params = uav_params
-        self.uav_status = UavStatus(location)
+        self.uav_status = UavStatus()
+        self.home_location = home_location.new()
+        self.uav_status.location = home_location.new()
         self.status_locker = RLock()
-        self._update_thread: Optional[Thread] = None
-        self._messages_reading_thread: Optional[Thread] = None
+        self._status_update_thread: Optional[Thread] = None
+        self._capabilities_update_thread: Optional[Thread] = None
         self._is_update_thread_run = False
-        self.on_update = GenericEvent(UpdateEventArgs)
-        self.communicator = UdpCommunicationManager(uav_params.uav_ip, uav_params.uav_port, CrcProvider32Bit(),
-                                                    PickleMessageSerializer())
         self.capabilities = capabilities
+        self.communicator = communicator
+        self.communicator.on_fly_to_destination += self._on_fly_to_destination_received
 
     def start(self):
         with self.status_locker:
             if self._is_update_thread_run:
-                raise Exception('update thread is running')
+                raise Exception('update thread is already running')
             self._is_update_thread_run = True
         self.reset_flight_time()
-        self._update_thread = Thread(name='update', target=self._update_thread_start, daemon=True)
-        self._update_thread.start()
-        self._messages_reading_thread = Thread(name='receive', target=self._messages_reading_thread_start, daemon=True)
-        self._messages_reading_thread.start()
+        self._status_update_thread = Thread(name='update', target=self._status_update_thread_start, daemon=True)
+        self._status_update_thread.start()
+        self._capabilities_update_thread = Thread(name='capabilities', target=self._capabilities_thread_start,
+                                                  daemon=True)
+        self._capabilities_update_thread.start()
 
     def stop(self):
         with self.status_locker:
@@ -61,21 +65,25 @@ class SimpleUavManager:
             self.uav_status.flight_mode = flight_mode
 
     def reset_flight_time(self):
+        """reset remaining flight time to full (battery charged)"""
         with self.status_locker:
             self.uav_status.remaining_flight_time = self.uav_params.max_flight_time
 
     def __str__(self):
         return PrintableParams.to_string(self, True)
 
-    def _update_thread_start(self):
+    def _status_update_thread_start(self):
         previous_update_time = time.time()
+        update_message_snd_time_counter = 0
         while self._is_update_thread_run:
-            time.sleep(self.uav_params.update_interval)
+            time.sleep(SimpleUavManager.LOCATION_CALCULATION_INTERVAL)
             new_update_time = time.time()
             delta_time = new_update_time - previous_update_time
             previous_update_time = new_update_time
+            update_message_snd_time_counter += delta_time
             with self.status_locker:
                 if not self.uav_status.flight_mode == FlightMode.IDLE:
+                    # update uav status
                     self.uav_status.direction = SimpleUavActions.calculate_Direction(self.uav_status.location,
                                                                                      self.uav_status.destination)
                     distance = SimpleUavActions.calculate_distance(self.uav_status.location,
@@ -87,33 +95,20 @@ class SimpleUavManager:
                             self.uav_params.flight_velocity,
                             delta_time)
                     self.uav_status.remaining_flight_time -= delta_time
-                capabilities_data = [capability.get(self.uav_status) for capability in self.capabilities]
-                ground_control_message = GroundControlUpdateMessage(self.uav_params.name, self.uav_status,
-                                                                    capabilities_data)
-                self.communicator.send_to(self.uav_params.ground_control_ip, self.uav_params.ground_control_port,
-                                          ground_control_message)
-            self.on_update.raise_event(UpdateEventArgs(self.uav_status.location.new(), self.uav_status.direction.new(),
-                                                       self.uav_status.remaining_flight_time, capabilities_data))
+                # check for update message sending need
+                if update_message_snd_time_counter >= self.uav_params.status_update_interval:
+                    update_message_snd_time_counter = 0
+                    self.communicator.send_uav_status_update(self.uav_status)
 
-    def _messages_reading_thread_start(self):
+    def _capabilities_thread_start(self):
         while self._is_update_thread_run:
-            time.sleep(SimpleUavManager.MESSAGES_READ_INTERVAL)
-            message_data_args = self.communicator.dequeue_received_message()
-            logger.debug(f'{message_data_args.message.message_id} {message_data_args.message_type}')
-            if message_data_args.message_type == FlyToDestinationMessage.MESSAGE_TYPE:
-                message: FlyToDestinationMessage = message_data_args.message
-                ack_message = AcknowledgeMessage(message.message_id)
-                self.communicator.send_to(self.uav_params.ground_control_ip, self.uav_params.ground_control_port,
-                                          ack_message)
-                self.set_destination(message.location)
-                self.set_state(FlightMode.TO_DESTINATION)
-            if message_data_args.message_type == ReturnToHomeMessage.MESSAGE_TYPE:
-                message: ReturnToHomeMessage = message_data_args.message
-                ack_message = AcknowledgeMessage(message.message_id)
-                self.communicator.send_to(self.uav_params.ground_control_ip, self.uav_params.ground_control_port,
-                                          ack_message)
-                self.set_destination(message.home_location)
-                self.set_state(FlightMode.TO_HOME)
+            time.sleep(self.uav_params.capabilities_update_interval)
+            capabilities_data_list = [c.get(self.uav_status) for c in self.capabilities]
+            self.communicator.send_uav_capabilities(capabilities_data_list)
+
+    def _on_fly_to_destination_received(self, message: FlyToDestinationMessage):
+        self.set_destination(message.destination)
+        self.set_state(message.destination_flight_mode)
 
 if __name__ == '__main__':
     from Apps.uav_simulator.testings.draw_course import draw3d

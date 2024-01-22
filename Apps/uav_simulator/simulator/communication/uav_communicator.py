@@ -6,15 +6,15 @@ from Apps.uav_simulator.simulator.communication.messages.capabilities_update_mes
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
 from Apps.uav_simulator.simulator.communication.messages.status_update_message import StatusUpdateMessage
-from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactory
+from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.specialized_communicator_base import SpecializedCommunicatorBase
 from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
 from common.generic_event import GenericEvent
 
 class UavCommunicator(SpecializedCommunicatorBase):
-    def __init__(self, logger: Logger, messages_factory: MessagesFactory, uav_descriptor, local_ip, local_port, gc_ip,
+    def __init__(self, logger: Logger, messages_factory: MessagesFactoryBase, uav_descriptor, uav_ip, uav_port, gc_ip,
                  gc_port):
-        super().__init__(logger, messages_factory, local_ip, local_port)
+        super().__init__(logger, messages_factory, uav_ip, uav_port)
         self.on_fly_to_destination = GenericEvent(FlyToDestinationMessage)
         self.gc_ip = gc_ip
         self.gc_port = gc_port

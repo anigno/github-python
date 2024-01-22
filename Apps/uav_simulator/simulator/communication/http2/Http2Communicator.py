@@ -7,7 +7,7 @@ from logging import Logger
 from Apps.uav_simulator.simulator.communication.http2.http2_client import Http2Client
 from Apps.uav_simulator.simulator.communication.http2.http2_server import Http2Server
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
-from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactory
+from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from common.generic_event import GenericEvent
 from common.printable_params import PrintableParams
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
@@ -15,7 +15,7 @@ from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 class Http2Communicator:
     """sends and receives messages based on MessageBase, using http2 client and server"""
 
-    def __init__(self, logger: Logger, messages_factory: MessagesFactory, local_ip: str, local_port: int):
+    def __init__(self, logger: Logger, messages_factory: MessagesFactoryBase, local_ip: str, local_port: int):
         self.logger = logger
         self.messages_factory = messages_factory
         self.local_ip = local_ip
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             super().__init__()
             self.data = 'hello'
 
-    class MessagesFactoryMock(MessagesFactory):
+    class MessagesFactoryMock(MessagesFactoryBase):
         def init_messages(self):
             self.register_message(TestMessage)
 
