@@ -1,13 +1,8 @@
-from enum import Enum
 from typing import Optional
 
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-
-class FlightMode(Enum):
-    IDLE = 0
-    TO_DESTINATION = 1
-    IN_DESTINATION = 2
 
 class UavStatus:
     """UAV current state parameters"""
@@ -17,7 +12,7 @@ class UavStatus:
         self.destination: Optional[Location3d] = None
         self.direction: Optional[Direction3d] = None
         self.remaining_flight_time = 0
-        self.flight_mode = FlightMode.IDLE
+        self.flight_mode = FlightModeEnum.IDLE
 
     def __str__(self):
         return f'(UavStatus: location:{self.location} remaining:{self.remaining_flight_time} {self.flight_mode})'

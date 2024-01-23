@@ -10,7 +10,7 @@ from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2_g
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class GrpcMessagesServer(CommunicationServiceServicer):
-    """grpc service receiving and exposing GenericEvent for messages"""
+    """grpc service running remote procedures and raising events"""
 
     def __init__(self, logger: Logger, ip, port):
         self._logger = logger

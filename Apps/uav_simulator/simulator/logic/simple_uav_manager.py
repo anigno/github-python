@@ -8,7 +8,8 @@ from Apps.uav_simulator.simulator.communication.uav_communicator import UavCommu
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
-from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
+from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from common.printable_params import PrintableParams
 
@@ -59,7 +60,7 @@ class SimpleUavManager:
         with self.status_locker:
             self.uav_status.destination = destination.copy()
 
-    def set_state(self, flight_mode: FlightMode):
+    def set_state(self, flight_mode: FlightModeEnum):
         with self.status_locker:
             self.uav_status.flight_mode = flight_mode
 
@@ -81,7 +82,7 @@ class SimpleUavManager:
             previous_update_time = new_update_time
             update_message_snd_time_counter += delta_time
             with self.status_locker:
-                if not self.uav_status.flight_mode == FlightMode.IDLE:
+                if not self.uav_status.flight_mode == FlightModeEnum.IDLE:
                     # update uav status
                     self.uav_status.direction = SimpleUavActions.calculate_Direction(self.uav_status.location,
                                                                                      self.uav_status.destination)
@@ -94,7 +95,7 @@ class SimpleUavManager:
                             self.uav_params.flight_velocity,
                             delta_time)
                     else:
-                        self.uav_status.flight_mode = FlightMode.IN_DESTINATION
+                        self.uav_status.flight_mode = FlightModeEnum.IN_DESTINATION
                     self.uav_status.remaining_flight_time -= delta_time
                 # check for update message sending need
                 if update_message_snd_time_counter >= self.uav_params.status_update_interval:

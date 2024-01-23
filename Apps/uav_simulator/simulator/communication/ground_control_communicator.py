@@ -3,12 +3,13 @@ from typing import Dict, Tuple
 
 from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
-from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages.message_type_enum import MessageTypeEnum
 from Apps.uav_simulator.simulator.communication.messages.status_update_message import StatusUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.specialized_communicator_base import SpecializedCommunicatorBase
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 from common.generic_event import GenericEvent
 
 class GroundControlCommunicator(SpecializedCommunicatorBase):
@@ -20,7 +21,7 @@ class GroundControlCommunicator(SpecializedCommunicatorBase):
         self.on_capabilities_updated = GenericEvent(CapabilitiesUpdateMessage)
         self.uav_addressbook_dict: Dict[str, Tuple[str, int]] = {}
 
-    def send_fly_to_destination(self, uav_descriptor: str, destination: Location3d, flight_mode: FlightMode):
+    def send_fly_to_destination(self, uav_descriptor: str, destination: Location3d, flight_mode: FlightModeEnum):
         message = FlyToDestinationMessage()
         message.destination = destination.copy()
         message.destination_flight_mode = flight_mode

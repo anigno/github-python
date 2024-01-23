@@ -5,7 +5,7 @@ class Location3d:
         self.h = h
 
     def copy(self):
-        """generate new Location3d instance with current fields values"""
+        """generate a copy of this instance"""
         return Location3d(self.x, self.y, self.h)
 
     def __str__(self):

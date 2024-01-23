@@ -1,17 +1,10 @@
 import time
 from abc import ABC
-from enum import Enum
 from threading import RLock
-
 import msgpack
 
+from Apps.uav_simulator.simulator.communication.messages.message_type_enum import MessageTypeEnum
 from common.printable_params import PrintableParams
-
-class MessageTypeEnum(Enum):
-    BASE = 100
-    STATUS_UPDATE = 101
-    CAPABILITIES_UPDATE = 102
-    FLY_TO_DESTINATION = 103
 
 class MessageBase(ABC):
     """base class for messages, uses msgpack serialization"""

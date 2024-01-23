@@ -7,7 +7,7 @@ from Apps.uav_simulator.simulator.communication.messages.status_update_message i
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.uav_message_factory import UavSimulatorMessageFactory
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class GroundControlMock:
@@ -24,7 +24,7 @@ class GroundControlMock:
     def start(self):
         self.communicator.start()
 
-    def send_fly_to(self, uav_descriptor: str, destination: Location3d, flight_mode: FlightMode):
+    def send_fly_to(self, uav_descriptor: str, destination: Location3d, flight_mode: FlightModeEnum):
         self.communicator.send_fly_to_destination(uav_descriptor, destination, flight_mode)
 
     def on_oav_status_updated(self, message: StatusUpdateMessage):
@@ -43,12 +43,12 @@ if __name__ == '__main__':
     gcm.start()
     time.sleep(10)
     if gcm.last_uav_descriptor is not None:
-        gcm.send_fly_to('UAV01', Location3d(100, 100, 0), FlightMode.TO_DESTINATION)
+        gcm.send_fly_to('UAV01', Location3d(100, 100, 0), FlightModeEnum.TO_DESTINATION)
     time.sleep(12)
     if gcm.last_uav_descriptor is not None:
-        gcm.send_fly_to('UAV01', Location3d(100, 100, 100), FlightMode.TO_DESTINATION)
+        gcm.send_fly_to('UAV01', Location3d(100, 100, 100), FlightModeEnum.TO_DESTINATION)
     time.sleep(12)
     if gcm.last_uav_descriptor is not None:
-        gcm.send_fly_to('UAV01', Location3d(0, 0, 0), FlightMode.TO_DESTINATION)
+        gcm.send_fly_to('UAV01', Location3d(0, 0, 0), FlightModeEnum.TO_DESTINATION)
 
     input('enter to exit')

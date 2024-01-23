@@ -4,6 +4,8 @@ from Apps.uav_simulator.simulator.communication.messages.status_update_message i
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 
 class UavSimulatorMessageFactory(MessagesFactoryBase):
+    """specific UAV simulator messages factory"""
+
     def __init__(self, logger):
         super().__init__(logger)
 

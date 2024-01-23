@@ -1,8 +1,10 @@
-from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages.message_type_enum import MessageTypeEnum
 import msgpack
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
+from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 
 class StatusUpdateMessage(MessageBase):
     MESSAGE_TYPE = MessageTypeEnum.STATUS_UPDATE
@@ -56,7 +58,7 @@ class StatusUpdateMessage(MessageBase):
         self.uav_status.direction = Direction3d(message_dict['status_direction'][0],
                                                 message_dict['status_direction'][1])
         self.uav_status.remaining_flight_time = message_dict['status_remaining_flight_time']
-        self.uav_status.flight_mode = FlightMode(message_dict['status_flight_mode'])
+        self.uav_status.flight_mode = FlightModeEnum(message_dict['status_flight_mode'])
 
 if __name__ == '__main__':
     s1 = StatusUpdateMessage()
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     s1.uav_status.location = Location3d(1, 2, 3)
     s1.uav_status.direction = Direction3d(4, 5)
     s1.uav_status.destination = Location3d(7, 8, 9)
-    s1.uav_status.flight_mode = FlightMode.TO_DESTINATION
+    s1.uav_status.flight_mode = FlightModeEnum.TO_DESTINATION
     s1.uav_status.remaining_flight_time = 17.45
     b1 = s1.to_buffer()
 

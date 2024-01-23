@@ -4,7 +4,8 @@ from typing import List
 from Apps.uav_simulator.simulator.capabilities.capability_data import CapabilityData
 from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
-from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages.message_type_enum import MessageTypeEnum
 from Apps.uav_simulator.simulator.communication.messages.message_sent_fail_args import MessageSentFailsArgs
 from Apps.uav_simulator.simulator.communication.messages.status_update_message import StatusUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
@@ -13,6 +14,7 @@ from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
 from common.generic_event import GenericEvent
 
 class UavCommunicator(SpecializedCommunicatorBase):
+    """handle receiving GC messages and send status messages to GC"""
     def __init__(self, logger: Logger, messages_factory: MessagesFactoryBase, uav_descriptor, uav_ip, uav_port, gc_ip,
                  gc_port):
         super().__init__(logger, messages_factory, uav_ip, uav_port)

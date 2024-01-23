@@ -13,6 +13,7 @@ from data_types.uav_params import UavParams
 class Runner:
     def __init__(self, logger: logging.Logger, config_file: str, location_string: str,
                  capabilities: List[CapabilityBase]):
+        """main UAV simulator runner"""
         uav_params = UavParams.from_json_config_file(config_file)
         # convert string 'x,y,h' to three floats x,y,h
         location_float_params = [float(b) for b in [a for a in location_string.split(',')]]

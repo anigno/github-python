@@ -6,7 +6,7 @@ class Direction3d:
         self.elevation = elevation
 
     def copy(self):
-        """generate new Direction3d instance with current fields values"""
+        """generate a copy of this instance"""
         return Direction3d(self.azimuth, self.elevation)
 
     @property

@@ -8,6 +8,7 @@ from Apps.uav_simulator.simulator.communication.grpc.communication_service_pb2 i
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class GrpcMessagesClient:
+    """grpc based client for calling specific remote procedures on server"""
     def __init__(self, logger: Logger, remote_ip, remote_port):
         self._logger = logger
         self._channel = grpc.insecure_channel(f'{remote_ip}:{remote_port}')

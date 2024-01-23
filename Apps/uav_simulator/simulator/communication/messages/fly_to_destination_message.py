@@ -1,15 +1,16 @@
 import msgpack
 
-from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
+from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages.message_type_enum import MessageTypeEnum
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode
+from Apps.uav_simulator.simulator.data_types.flight_mode_enum import FlightModeEnum
 
 class FlyToDestinationMessage(MessageBase):
     MESSAGE_TYPE = MessageTypeEnum.FLY_TO_DESTINATION
 
     def __init__(self):
         super().__init__()
-        self.destination_flight_mode: FlightMode = FlightMode.IDLE
+        self.destination_flight_mode: FlightModeEnum = FlightModeEnum.IDLE
         self.destination: Location3d = Location3d()
 
     def __str__(self):
@@ -34,7 +35,7 @@ class FlyToDestinationMessage(MessageBase):
         self.message_id = message_dict['message_id']
         self.send_time = message_dict['send_time']
         # from derived
-        self.destination_flight_mode = FlightMode(message_dict['destination_flight_mode'])
+        self.destination_flight_mode = FlightModeEnum(message_dict['destination_flight_mode'])
         self.destination = Location3d(message_dict['destination'][0],
                                       message_dict['destination'][1],
                                       message_dict['destination'][2])
@@ -42,7 +43,7 @@ class FlyToDestinationMessage(MessageBase):
 if __name__ == '__main__':
     f1 = FlyToDestinationMessage()
     f1.send_time = 1234.567
-    f1.destination_flight_mode = FlightMode.TO_HOME
+    f1.destination_flight_mode = FlightModeEnum.TO_HOME
     f1.destination = Location3d(1, 2, 3)
     b1 = f1.to_buffer()
 
