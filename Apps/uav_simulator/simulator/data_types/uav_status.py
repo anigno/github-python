@@ -7,7 +7,7 @@ from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 class FlightMode(Enum):
     IDLE = 0
     TO_DESTINATION = 1
-    TO_HOME = 2
+    IN_DESTINATION = 2
 
 class UavStatus:
     """UAV current state parameters"""
@@ -20,4 +20,4 @@ class UavStatus:
         self.flight_mode = FlightMode.IDLE
 
     def __str__(self):
-        return f'(UavStatus: location:{self.location} remaining:{self.remaining_flight_time})'
+        return f'(UavStatus: location:{self.location} remaining:{self.remaining_flight_time} {self.flight_mode})'

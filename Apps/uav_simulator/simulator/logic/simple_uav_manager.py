@@ -93,6 +93,8 @@ class SimpleUavManager:
                             self.uav_status.direction,
                             self.uav_params.flight_velocity,
                             delta_time)
+                    else:
+                        self.uav_status.flight_mode = FlightMode.IN_DESTINATION
                     self.uav_status.remaining_flight_time -= delta_time
                 # check for update message sending need
                 if update_message_snd_time_counter >= self.uav_params.status_update_interval:
