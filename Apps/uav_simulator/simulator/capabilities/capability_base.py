@@ -4,6 +4,7 @@ from Apps.uav_simulator.simulator.capabilities.capability_data import Capability
 from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus
 
 class CapabilityBase(ABC):
+    """base class for all capabilities"""
     @abstractmethod
     def get(self, uav_status: UavStatus) -> CapabilityData:
         pass
