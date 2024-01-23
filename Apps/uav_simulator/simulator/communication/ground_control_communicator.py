@@ -1,12 +1,11 @@
 from logging import Logger
 from typing import Dict, Tuple
 
-from Apps.uav_simulator.simulator.communication.http2.Http2Communicator import Http2Communicator
 from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase, MessageTypeEnum
 from Apps.uav_simulator.simulator.communication.messages.status_update_message import StatusUpdateMessage
-from Apps.uav_simulator.simulator.communication.messages_factory import MessagesFactoryBase
+from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.specialized_communicator_base import SpecializedCommunicatorBase
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode

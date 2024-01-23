@@ -3,7 +3,6 @@ import logging
 from typing import List
 
 from Apps.uav_simulator.simulator.capabilities.capability_base import CapabilityBase
-from Apps.uav_simulator.simulator.capabilities.capability_data import CapabilityData
 from Apps.uav_simulator.simulator.communication.uav_communicator import UavCommunicator
 from Apps.uav_simulator.simulator.communication.uav_message_factory import UavSimulatorMessageFactory
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
