@@ -4,17 +4,17 @@ from common.crc.crc_providers import CrcProviderBase, CrcProvider32Bit
 from common.generic_event import GenericEvent
 from communication.udp.event_args.crc_error_event_args import CrcErrorEventArgs
 from communication.udp.event_args.data_received_event_args import DataReceivedEventArgs
-from communication.udp.message_base import MessageBase
 from communication.udp.event_args.message_received_event_args import MessageReceivedEventArgs
 from communication.udp.serializers.pickle_message_serializer import PickleMessageSerializer
 from communication.udp.serializers.message_serializer_base import MessageSerializerBase
 from communication.udp.udp_communicator_with_crc import UdpCommunicatorWithCrc
+from communication.udp.udp_message_base import UdpMessageBase
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class UdpMessagesCommunicator:
-    """sends and receives messages based of MessageBase, after crc verifications and serialization"""
+    """sends and receives messages based of UdpMessageBase, after crc verifications and serialization"""
 
     def __init__(self, local_ip: str, local_port: int, crc_provider: CrcProviderBase,
                  message_serializer: MessageSerializerBase):
@@ -31,7 +31,7 @@ class UdpMessagesCommunicator:
     def stop_receiving(self):
         self.communicator.stop_receiving()
 
-    def send_to(self, target_ip: str, target_port: int, message: MessageBase):
+    def send_to(self, target_ip: str, target_port: int, message: UdpMessageBase):
         message.sent_time = int(time.time())
         buffer = self.message_serializer.to_buffer(message)
         message_type_bytes = message.MESSAGE_TYPE.to_bytes(length=2, byteorder='big')
@@ -60,7 +60,7 @@ class UdpMessagesCommunicator:
 if __name__ == '__main__':
     LoggingInitiatorByCode()
 
-    class MessageSample(MessageBase):
+    class MessageSample(UdpMessageBase):
         MESSAGE_TYPE = 1234
 
         def __init__(self):
