@@ -23,7 +23,7 @@ class GroundControlCommunicator(SpecializedCommunicatorBase):
 
     def send_fly_to_destination(self, uav_descriptor: str, destination: Location3d, flight_mode: FlightMode):
         message = FlyToDestinationMessage()
-        message.destination = destination.new()
+        message.destination = destination.copy()
         message.destination_flight_mode = flight_mode
         ip_endpoint = self.uav_addressbook_dict[uav_descriptor]
         self.communicator.send_message(message, *ip_endpoint)

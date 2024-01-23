@@ -4,7 +4,7 @@ class Location3d:
         self.y = y
         self.h = h
 
-    def new(self):
+    def copy(self):
         """generate new Location3d instance with current fields values"""
         return Location3d(self.x, self.y, self.h)
 
@@ -14,7 +14,7 @@ class Location3d:
 if __name__ == '__main__':
     l1 = Location3d(1, 2, 3)
     l2 = l1
-    l3 = l1.new()
+    l3 = l1.copy()
     l1.x = 5
     l3.x = 7
     print(l1.x, l2.x, l3.x)

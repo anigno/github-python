@@ -5,7 +5,7 @@ class Direction3d:
         self.azimuth = azimuth
         self.elevation = elevation
 
-    def new(self):
+    def copy(self):
         """generate new Direction3d instance with current fields values"""
         return Direction3d(self.azimuth, self.elevation)
 

@@ -8,6 +8,7 @@ from Apps.uav_simulator.simulator.capabilities.capability_base import Capability
 from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
 from Apps.uav_simulator.simulator.communication.uav_communicator import UavCommunicator
+from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
 from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
@@ -30,8 +31,10 @@ class SimpleUavManager:
         logger.info(f'\n{uav_params}\n')
         self.uav_params = uav_params
         self.uav_status = UavStatus()
-        self.home_location = home_location.new()
-        self.uav_status.location = home_location.new()
+        self.home_location = home_location.copy()
+        self.uav_status.location = home_location.copy()
+        self.uav_status.destination = home_location.copy()
+        self.uav_status.direction = Direction3d(0, 0)
         self.status_locker = RLock()
         self._status_update_thread: Optional[Thread] = None
         self._capabilities_update_thread: Optional[Thread] = None
@@ -58,7 +61,7 @@ class SimpleUavManager:
 
     def set_destination(self, destination: Location3d):
         with self.status_locker:
-            self.uav_status.destination = destination.new()
+            self.uav_status.destination = destination.copy()
 
     def set_state(self, flight_mode: FlightMode):
         with self.status_locker:

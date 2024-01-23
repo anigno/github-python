@@ -7,6 +7,7 @@ from logging import Logger
 from Apps.uav_simulator.simulator.communication.http2.http2_client import Http2Client
 from Apps.uav_simulator.simulator.communication.http2.http2_server import Http2Server
 from Apps.uav_simulator.simulator.communication.messages.message_base import MessageBase
+from Apps.uav_simulator.simulator.communication.messages.message_sent_fail_args import MessageSentFailsArgs
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from common.generic_event import GenericEvent
 from common.printable_params import PrintableParams
@@ -24,17 +25,28 @@ class Http2Communicator:
         self.client = Http2Client
         self.on_message_receive = GenericEvent(MessageBase)
         self.server.on_request_post_received += self._on_request_post_received
+        self.on_error_sending_message = GenericEvent(MessageSentFailsArgs)
 
     def start(self):
         self.server.start(self.local_ip, self.local_port)
 
     def send_message(self, message: MessageBase, ip, port) -> HTTPResponse:
-        message.send_time = time.time()
-        message_bytes = message.to_buffer()
-        message_type_bytes = message.MESSAGE_TYPE.value.to_bytes(2, 'big', signed=False)
-        message_bytes = message_type_bytes + message_bytes
-        response = self.client.send_data_request(message_bytes, ip, port)
-        return response
+        try:
+            message.send_time = time.time()
+            message_bytes = message.to_buffer()
+            message_type_bytes = message.MESSAGE_TYPE.value.to_bytes(2, 'big', signed=False)
+            message_bytes = message_type_bytes + message_bytes
+            response = self.client.send_data_request(message_bytes, ip, port)
+            return response
+        except ConnectionRefusedError as ex:
+            self.logger.debug(f'Message: {message.MESSAGE_TYPE} id: {message.message_id} to {ip}:{port} failed to sent')
+            args = MessageSentFailsArgs(ex, message, f'{ip}:{port}')
+            self.on_error_sending_message.raise_event(args)
+        except Exception as ex:
+            self.logger.exception('', ex)
+            self.logger.debug(f'Message: {message.MESSAGE_TYPE} id: {message.message_id} to {ip}:{port} failed to sent')
+            args = MessageSentFailsArgs(ex, message, f'{ip}:{port}')
+            self.on_error_sending_message.raise_event(args)
 
     def _on_request_post_received(self, data_bytes: bytes):
         message_type_value = int.from_bytes(data_bytes[0:2], 'big', signed=False)
