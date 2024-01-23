@@ -7,15 +7,14 @@ from Apps.uav_simulator.simulator.communication.messages.status_update_message i
 from Apps.uav_simulator.simulator.communication.messages_factory_base import MessagesFactoryBase
 from Apps.uav_simulator.simulator.communication.uav_message_factory import UavSimulatorMessageFactory
 from Apps.uav_simulator.simulator.data_types.location3d import Location3d
-from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from Apps.uav_simulator.simulator.data_types.uav_status import FlightMode
-from Apps.uav_simulator.testings.simple_uav_manager_config_samples import SimpleUavManagerConfigSamples
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
 
 class GroundControlMock:
     """simulate a ground control"""
 
     def __init__(self, logger: logging.Logger, message_factory: MessagesFactoryBase, local_ip, local_port):
+        self.last_uav_descriptor = None
         self.logger = logger
         self.communicator = GroundControlCommunicator(logger, message_factory, local_ip, local_port)
         self.communicator.on_uav_status_updated += self.on_oav_status_updated
@@ -30,6 +29,7 @@ class GroundControlMock:
 
     def on_oav_status_updated(self, message: StatusUpdateMessage):
         self.logger.debug(f'{message}')
+        self.last_uav_descriptor = message.uav_descriptor
 
     def on_capabilities_updated(self, message: CapabilitiesUpdateMessage):
         self.logger.debug(f'{message}')
@@ -38,6 +38,17 @@ if __name__ == '__main__':
     main_logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
     LoggingInitiatorByCode(log_files_path=r'd:\temp\logs\gc')
     main_logger.info(f'starting')
-    message_factory = UavSimulatorMessageFactory(main_logger)
-    gcm = GroundControlMock(main_logger, message_factory, 'localhost', 1001)
+    main_message_factory = UavSimulatorMessageFactory(main_logger)
+    gcm = GroundControlMock(main_logger, main_message_factory, 'localhost', 1001)
     gcm.start()
+    time.sleep(10)
+    if gcm.last_uav_descriptor is not None:
+        gcm.send_fly_to('UAV01', Location3d(100, 100, 0), FlightMode.TO_DESTINATION)
+    time.sleep(12)
+    if gcm.last_uav_descriptor is not None:
+        gcm.send_fly_to('UAV01', Location3d(100, 100, 100), FlightMode.TO_DESTINATION)
+    time.sleep(12)
+    if gcm.last_uav_descriptor is not None:
+        gcm.send_fly_to('UAV01', Location3d(0, 0, 0), FlightMode.TO_DESTINATION)
+
+    input('enter to exit')

@@ -2,10 +2,7 @@ import logging
 import time
 from threading import Thread, RLock
 from typing import Optional, List
-
-from Apps.uav_simulator.simulator.capabilities.camera_simulation_capability import CameraSimulationCapability
 from Apps.uav_simulator.simulator.capabilities.capability_base import CapabilityBase
-from Apps.uav_simulator.simulator.communication.messages.capabilities_update_message import CapabilitiesUpdateMessage
 from Apps.uav_simulator.simulator.communication.messages.fly_to_destination_message import FlyToDestinationMessage
 from Apps.uav_simulator.simulator.communication.uav_communicator import UavCommunicator
 from Apps.uav_simulator.simulator.data_types.direction3d import Direction3d
@@ -14,9 +11,6 @@ from Apps.uav_simulator.simulator.data_types.uav_params import UavParams
 from Apps.uav_simulator.simulator.data_types.uav_status import UavStatus, FlightMode
 from Apps.uav_simulator.simulator.logic.simple_uav_actions import SimpleUavActions
 from common.printable_params import PrintableParams
-from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
-
-logger = logging.getLogger(LoggingInitiatorByCode.FILE_SYSTEM_LOGGER)
 
 class SimpleUavManager:
     """manage the Uav operations and messaging
@@ -26,9 +20,10 @@ class SimpleUavManager:
     """
     LOCATION_CALCULATION_INTERVAL = 0.1
 
-    def __init__(self, uav_params: UavParams, home_location: Location3d, capabilities: List[CapabilityBase],
+    def __init__(self, logger: logging.Logger, uav_params: UavParams, home_location: Location3d, capabilities: List[CapabilityBase],
                  communicator: UavCommunicator):
-        logger.info(f'\n{uav_params}\n')
+        self.logger = logger
+        self.logger.info(f'\n{uav_params}\n')
         self.uav_params = uav_params
         self.uav_status = UavStatus()
         self.home_location = home_location.copy()
@@ -54,6 +49,7 @@ class SimpleUavManager:
         self._capabilities_update_thread = Thread(name='capabilities', target=self._capabilities_thread_start,
                                                   daemon=True)
         self._capabilities_update_thread.start()
+        self.communicator.start()
 
     def stop(self):
         with self.status_locker:
@@ -102,6 +98,7 @@ class SimpleUavManager:
                 if update_message_snd_time_counter >= self.uav_params.status_update_interval:
                     update_message_snd_time_counter = 0
                     self.communicator.send_uav_status_update(self.uav_status)
+                    self.logger.debug(f'{self.uav_params.uav_descriptor} {self.uav_status}')
 
     def _capabilities_thread_start(self):
         while self._is_update_thread_run:
@@ -110,39 +107,6 @@ class SimpleUavManager:
             self.communicator.send_uav_capabilities(capabilities_data_list)
 
     def _on_fly_to_destination_received(self, message: FlyToDestinationMessage):
+        self.logger.debug(f'{message.destination} {message.destination_flight_mode}')
         self.set_destination(message.destination)
         self.set_state(message.destination_flight_mode)
-
-if __name__ == '__main__':
-    from Apps.uav_simulator.testings.draw_course import draw3d
-    from Apps.uav_simulator.testings.simple_uav_manager_config_samples import SimpleUavManagerConfigSamples
-
-    LoggingInitiatorByCode()
-
-    x = []
-    y = []
-    z = []
-
-    def on_update_event_handler(update_event_args: UpdateEventArgs):
-        print(f'location={update_event_args.location} remaining={update_event_args.remaining_flight_time:.1f}s')
-        x.append(update_event_args.location.x)
-        y.append(update_event_args.location.y)
-        z.append(update_event_args.location.h)
-
-    uav = SimpleUavManager(UavParams(SimpleUavManagerConfigSamples.config1), Location3d(0, 0, 0),
-                           [CameraSimulationCapability()])
-    print(uav)
-    uav.on_update.register(on_update_event_handler)
-    uav.start()
-    time.sleep(2)
-    uav.set_destination(Location3d(100, 100, 0))
-    time.sleep(3)
-    uav.set_destination(Location3d(100, 100, 100))
-    time.sleep(3)
-    uav.set_destination(Location3d(0, 0, 0))
-    time.sleep(2)
-    uav.stop()
-    time.sleep(1)
-    uav.start()
-    time.sleep(6)
-    draw3d(x, y, z)

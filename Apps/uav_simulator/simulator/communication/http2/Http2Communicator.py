@@ -1,4 +1,5 @@
 import logging
+import threading
 import time
 from enum import Enum
 from http.client import HTTPResponse
@@ -28,7 +29,7 @@ class Http2Communicator:
         self.on_error_sending_message = GenericEvent(MessageSentFailsArgs)
 
     def start(self):
-        self.server.start(self.local_ip, self.local_port)
+        threading.Thread(target=lambda: self.server.start(self.local_ip, self.local_port), daemon=True).start()
 
     def send_message(self, message: MessageBase, ip, port) -> HTTPResponse:
         try:

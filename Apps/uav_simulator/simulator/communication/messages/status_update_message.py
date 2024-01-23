@@ -23,6 +23,7 @@ class StatusUpdateMessage(MessageBase):
             'message_id': self.message_id,
             'send_time': self.send_time,
             # from derived
+            'uav_descriptor': self.uav_descriptor,
             'uav_local_ip': self.uav_local_ip,
             'uav_local_port': self.uav_local_port,
             'status_location': [self.uav_status.location.x,
@@ -43,6 +44,7 @@ class StatusUpdateMessage(MessageBase):
         self.message_id = message_dict['message_id']
         self.send_time = message_dict['send_time']
         # from derived
+        self.uav_descriptor = message_dict['uav_descriptor']
         self.uav_local_ip = message_dict['uav_local_ip']
         self.uav_local_port = message_dict['uav_local_port']
         self.uav_status.location = Location3d(message_dict['status_location'][0],
@@ -51,8 +53,8 @@ class StatusUpdateMessage(MessageBase):
         self.uav_status.destination = Location3d(message_dict['status_destination'][0],
                                                  message_dict['status_destination'][1],
                                                  message_dict['status_destination'][2])
-        self.uav_status.destination = Direction3d(message_dict['status_direction'][0],
-                                                  message_dict['status_direction'][1])
+        self.uav_status.direction = Direction3d(message_dict['status_direction'][0],
+                                                message_dict['status_direction'][1])
         self.uav_status.remaining_flight_time = message_dict['status_remaining_flight_time']
         self.uav_status.flight_mode = FlightMode(message_dict['status_flight_mode'])
 

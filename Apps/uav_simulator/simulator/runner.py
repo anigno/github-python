@@ -22,7 +22,7 @@ class Runner:
         communicator = UavCommunicator(logger, messages_factory, uav_params.uav_descriptor, uav_params.uav_ip,
                                        uav_params.uav_port, uav_params.ground_control_ip,
                                        uav_params.ground_control_port, )
-        self.uav_manager = SimpleUavManager(uav_params, home_location, capabilities, communicator)
+        self.uav_manager = SimpleUavManager(logger, uav_params, home_location, capabilities, communicator)
 
     def start(self):
         self.uav_manager.start()

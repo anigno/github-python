@@ -18,3 +18,6 @@ class UavStatus:
         self.direction: Optional[Direction3d] = None
         self.remaining_flight_time = 0
         self.flight_mode = FlightMode.IDLE
+
+    def __str__(self):
+        return f'(UavStatus: location:{self.location} remaining:{self.remaining_flight_time})'
