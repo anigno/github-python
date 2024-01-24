@@ -43,7 +43,7 @@ if __name__ == '__main__':
     gcm.start()
     time.sleep(10)
     if gcm.last_uav_descriptor is not None:
-        gcm.send_fly_to('UAV01', Location3d(100, 100, 0), FlightModeEnum.TO_DESTINATION)
+        gcm.send_fly_to('UAV01', Location3d(100, 100, 10), FlightModeEnum.TO_DESTINATION)
     time.sleep(12)
     if gcm.last_uav_descriptor is not None:
         gcm.send_fly_to('UAV01', Location3d(100, 100, 100), FlightModeEnum.TO_DESTINATION)
