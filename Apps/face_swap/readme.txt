@@ -1,0 +1,19 @@
+installation:
+0. install cmake
+1. install anaconda to c:\anaconda3\
+2. create python project with face_swap.py
+3. set python interpreter to c:\anaconda3\scripts\conda.exe
+4. using project terminal install:
+    pip install opencv-python
+    pip install -U insightface
+    pip install -U onnxruntime-gpu
+5. copy inswapper_128.onnx to c:\Users\anign\.insightface\models\
+6 ensure c:\Users\anign\.insightface\models\buffalo_l\ folder exist with:
+    1k3d68.onnx
+    2d106det.onnx
+    det_10g.onnx
+    genderage.onnx
+    w600k_r50.onnx
+    (if not extract buffalo_l.zip)
+    y
+
