@@ -9,6 +9,7 @@ import cv2
 import insightface
 from insightface.app import FaceAnalysis
 from insightface.data import get_image as ins_get_image
+import random
 
 assert insightface.__version__ >= '0.7'
 
@@ -49,17 +50,19 @@ class FaceSwap:
 
     @staticmethod
     def swap_multi(main_dir):
+
         src_dir = os.path.join(main_dir, 'src')
         tar_dir = os.path.join(main_dir, 'tar')
         res_dir = os.path.join(main_dir, 'res')
         for j, tar in enumerate(os.listdir(tar_dir)):
             for i, src in enumerate(os.listdir(src_dir)):
-                result=FaceSwap.do_swap(os.path.join(src_dir, src), 0, os.path.join(tar_dir, tar), 'res.jpg')
+                result = FaceSwap.do_swap(os.path.join(src_dir, src), 0, os.path.join(tar_dir, tar), 'res.jpg')
                 if result:
-                    shutil.move('res.jpg', os.path.join(res_dir, f'res_{j}_{i}.jpg'))
+                    r = random.randint(100000, 999999)
+                    shutil.move('res.jpg', os.path.join(res_dir, f'res_{j}_{i}_{r}.jpg'))
 
 if __name__ == '__main__':
-    FaceSwap.swap_multi(r'D:\shared\swap\keren_ch')
+    FaceSwap.swap_multi(r'D:\shared\swap')
     # def sample(),:
     #     app = FaceAnalysis(name='buffalo_l')
     #     app.prepare(ctx_id=0, det_size=(640, 640))
