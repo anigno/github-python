@@ -1,19 +1,18 @@
-import datetime
-import shutil
-
-import numpy as np
 import os
-import os.path as osp
-import glob
+import random
+import shutil
+import time
 import cv2
 import insightface
 from insightface.app import FaceAnalysis
 from insightface.data import get_image as ins_get_image
-import random
 
 assert insightface.__version__ >= '0.7'
 
 class FaceSwap:
+    app = FaceAnalysis(name='buffalo_l')
+    swapper = insightface.model_zoo.get_model('inswapper_128.onnx', download=True, download_zip=True)
+
     @staticmethod
     def do_swap(source_img: str = 't1', source_face_index: int = 0, target_img: str = 'tar.jpg',
                 result_img: str = 'res.jpg'):
@@ -22,21 +21,19 @@ class FaceSwap:
         shutil.copy(target_img, anaconda_path)
         source_img_name = source_img.split('.')[0]
         target_img_name = target_img.split('.')[0]
-        app = FaceAnalysis(name='buffalo_l')
-        app.prepare(ctx_id=0, det_size=(640, 640))
-        swapper = insightface.model_zoo.get_model('inswapper_128.onnx', download=True, download_zip=True)
+        FaceSwap.app.prepare(ctx_id=0, det_size=(640, 640))
         src_img = ins_get_image(source_img_name)
-        src_faces = app.get(src_img)
+        src_faces = FaceSwap.app.get(src_img)
         src_faces = sorted(src_faces, key=lambda x: x.bbox[0])
         if not src_faces:
             return False
         source_face = src_faces[source_face_index]
         tar_img = ins_get_image(target_img_name)
-        tar_faces = app.get(tar_img)
+        tar_faces = FaceSwap.app.get(tar_img)
         tar_faces = sorted(tar_faces, key=lambda x: x.bbox[0])
         res_image = tar_img.copy()
         for face in tar_faces:
-            res_image = swapper.get(res_image, face, source_face, paste_back=True)
+            res_image = FaceSwap.swapper.get(res_image, face, source_face, paste_back=True)
         cv2.imwrite(f"./{result_img}", res_image)
         return True
         # os.remove(os.path.join(anaconda_path, source_img))
@@ -54,15 +51,26 @@ class FaceSwap:
         src_dir = os.path.join(main_dir, 'src')
         tar_dir = os.path.join(main_dir, 'tar')
         res_dir = os.path.join(main_dir, 'res')
-        for j, tar in enumerate(os.listdir(tar_dir)):
-            for i, src in enumerate(os.listdir(src_dir)):
+        tar_list = os.listdir(tar_dir)
+        src_list = os.listdir(src_dir)
+        total = len(tar_list) * (len(src_list))
+        count = 1
+        start_time = time.time()
+        print(f'\n****** targets={len(tar_list)} sources={len(src_list)} total={total} ******\n')
+        for j, tar in enumerate(tar_list):
+            for i, src in enumerate(src_list):
                 result = FaceSwap.do_swap(os.path.join(src_dir, src), 0, os.path.join(tar_dir, tar), 'res.jpg')
                 if result:
                     r = random.randint(100000, 999999)
                     shutil.move('res.jpg', os.path.join(res_dir, f'res_{j}_{i}_{r}.jpg'))
+                time_passed = time.time() - start_time
+                time_per_swap = time_passed / count
+                time_left = time_per_swap * (total - count)
+                print(f'\n****** {count}/{total} time left: {int(time_left)//60}:{int(time_left)%60}  time per swap: {int(time_per_swap)} sec******\n')
+                count += 1
 
 if __name__ == '__main__':
-    FaceSwap.swap_multi(r'D:\shared\swap')
+    FaceSwap.swap_multi(r'O:\swap\swap_new\ilona_gold')
     # def sample(),:
     #     app = FaceAnalysis(name='buffalo_l')
     #     app.prepare(ctx_id=0, det_size=(640, 640))
