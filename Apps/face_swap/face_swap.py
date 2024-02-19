@@ -13,12 +13,13 @@ class FaceSwap:
     app = FaceAnalysis(name='buffalo_l')
     swapper = insightface.model_zoo.get_model('inswapper_128.onnx', download=True, download_zip=True)
 
+    anaconda_path = r'C:\anaconda3\Lib\site-packages\insightface\data\images'
+
     @staticmethod
     def do_swap(source_img: str = 't1', source_face_index: int = 0, target_img: str = 'tar.jpg',
                 result_img: str = 'res.jpg'):
-        anaconda_path = r'C:\anaconda3\Lib\site-packages\insightface\data\images'
-        shutil.copy(source_img, anaconda_path)
-        shutil.copy(target_img, anaconda_path)
+        shutil.copy(source_img, FaceSwap.anaconda_path)
+        shutil.copy(target_img, FaceSwap.anaconda_path)
         source_img_name = source_img.split('.')[0]
         target_img_name = target_img.split('.')[0]
         FaceSwap.app.prepare(ctx_id=0, det_size=(640, 640))
@@ -47,7 +48,6 @@ class FaceSwap:
 
     @staticmethod
     def swap_multi(main_dir):
-
         src_dir = os.path.join(main_dir, 'src')
         tar_dir = os.path.join(main_dir, 'tar')
         res_dir = os.path.join(main_dir, 'res')
@@ -66,11 +66,21 @@ class FaceSwap:
                 time_passed = time.time() - start_time
                 time_per_swap = time_passed / count
                 time_left = time_per_swap * (total - count)
-                print(f'\n****** {count}/{total} time left: {int(time_left)//60}:{int(time_left)%60}  time per swap: {int(time_per_swap)} sec******\n')
+                print(f'\n****** {count}/{total} time left: {int(time_left) // 60}:{int(time_left) % 60}  time per swap: {int(time_per_swap)} sec******\n')
                 count += 1
+        FaceSwap.del_files(FaceSwap.anaconda_path)
+
+    @staticmethod
+    def del_files(folder_path):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            # Check if the path is a file
+            if os.path.isfile(file_path):
+                # Delete the file
+                os.remove(file_path)
 
 if __name__ == '__main__':
-    FaceSwap.swap_multi(r'O:\swap\swap_new\ilona_gold')
+    FaceSwap.swap_multi(r'O:\swap\swap_new\ifat_kyd')
     # def sample(),:
     #     app = FaceAnalysis(name='buffalo_l')
     #     app.prepare(ctx_id=0, det_size=(640, 640))
