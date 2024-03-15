@@ -2,9 +2,9 @@ installation:
 0. install cmake
 1. install anaconda to c:\anaconda3\
 2. create python project with face_swap.py
-3. set python interpreter to c:\anaconda3\scripts\conda.exe
+3. set python interpreter to c:\anaconda3\scripts\conda.exe (c:\anaconda3\python.exe)
 3.5 install ms build tools BuildTools_Full 2015.exe (see docs or https://github.com/bycloudai/InstallVSBuildToolsWindows?tab=readme-ov-file)
-4. using project terminal install:
+4. using project terminal install: (C:\anaconda3\Scripts\pip install opencv-python)
     pip install opencv-python
     pip install -U insightface
     pip install -U onnxruntime-gpu
