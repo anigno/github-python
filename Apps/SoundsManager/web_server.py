@@ -113,7 +113,14 @@ class WebServerApp:
     def play(self):
         self.playing_mode = PlayingMode.PLAYING
         self.triggered_time = 0
+
+        client_ip = request.headers.get('X-Real-IP') or request.headers.get('X-Forwarded-For')
+        if not client_ip:
+            client_ip = request.remote_addr +' *'
+
+        self.logger.info(f'play requested by {client_ip}')
         return self.render_index()
+
 
     def stop(self):
         self.playing_mode = PlayingMode.STOPPED
