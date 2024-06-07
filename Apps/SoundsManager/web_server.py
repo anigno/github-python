@@ -6,8 +6,10 @@ import random
 import threading
 import time
 from random import seed
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from pygame import mixer
+
+from common.utils import get_hash_code
 from enums import *
 from logging_provider.logging_initiator_base import LoggingInitiatorBase
 from logging_provider.logging_initiator_by_code import LoggingInitiatorByCode
@@ -18,6 +20,8 @@ class WebServerApp:
     SOUNDS_FOLDER = 'sounds'
 
     def __init__(self, serving_ip=SERVING_ALL_ADDRESSES, serving_port=SERVING_PORT_DEFAULT):
+        self.correct_hash = "efbd1f26a54875e39972ccf7fa21a34f2491c850b2eba9636cb5478e595897b5"
+        self.logged_in = False
         self.serving_ip = serving_ip
         self.serving_port = serving_port
         LoggingInitiatorByCode('logs')
@@ -40,6 +44,8 @@ class WebServerApp:
         self.main_thread = threading.Thread(target=self.main_thread_start, daemon=True)
 
     def add_rules(self):
+        self.app.add_url_rule('/login', 'login', self.login, methods=['GET', 'POST'])
+        self.app.add_url_rule('/logout', 'logout', self.logout)
         self.app.add_url_rule("/", view_func=self.render_index, methods=['POST', 'GET'])
         self.app.add_url_rule("/constructions", view_func=self.constructions, methods=['POST', 'GET'])
         self.app.add_url_rule("/dogs", view_func=self.dogs, methods=['POST', 'GET'])
@@ -77,7 +83,24 @@ class WebServerApp:
                 self.playing_mode = PlayingMode.IDLE
                 self.logger.info('stopped playing')
 
+    def login(self):
+        if request.method == 'POST':
+            password = request.form['password']
+            password_hash = get_hash_code(password)
+            if password_hash == self.correct_hash:
+                self.logged_in = True
+                return redirect(url_for('render_index'))
+            else:
+                return render_template('login.html', error="Invalid credentials")
+        return render_template('login.html')
+
+    def logout(self):
+        self.logged_in = False
+        return redirect(url_for('login'))
+
     def render_index(self):
+        if not self.logged_in:
+            return redirect(url_for('login'))
         self.params['secondary_message'] = \
             f'[{self.playing_mode.name}] [{self.selected_sound.name} ' \
             f'[T: {self.seconds_to_time_str(self.triggered_time)}]'
@@ -116,11 +139,10 @@ class WebServerApp:
 
         client_ip = request.headers.get('X-Real-IP') or request.headers.get('X-Forwarded-For')
         if not client_ip:
-            client_ip = request.remote_addr +' *'
+            client_ip = request.remote_addr + ' *'
 
         self.logger.info(f'play requested by {client_ip}')
         return self.render_index()
-
 
     def stop(self):
         self.playing_mode = PlayingMode.STOPPED

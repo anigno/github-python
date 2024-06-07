@@ -80,7 +80,7 @@ class FaceSwap:
                 os.remove(file_path)
 
 if __name__ == '__main__':
-    FaceSwap.swap_multi(r'O:\swap\swap_new\ziva_saad')
+    FaceSwap.swap_multi(r'O:\swap\someone')
     # def sample(),:
     #     app = FaceAnalysis(name='buffalo_l')
     #     app.prepare(ctx_id=0, det_size=(640, 640))
