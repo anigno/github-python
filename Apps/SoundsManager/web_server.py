@@ -28,6 +28,11 @@ class WebServerApp:
         self.logger = logging.getLogger(LoggingInitiatorBase.FILE_SYSTEM_LOGGER)
         self.logger.info('App started')
         self.app = Flask('SoundsManager')
+
+        # self.app.config['SERVER_NAME'] = '192.168.1.29:5000'
+        # self.app.config['APPLICATION_ROOT'] = '/'
+        # self.app.config['PREFERRED_URL_SCHEME'] = 'http'
+
         self.add_rules()
         self.counter = 0
         self.triggered_time = 0
@@ -65,23 +70,26 @@ class WebServerApp:
 
     def main_thread_start(self):
         while True:
-            time.sleep(1)
-            self.counter += 1
-            self.triggered_time -= 1
-            if self.triggered_time < 0:
-                self.triggered_time = 0
-            if self.playing_mode is PlayingMode.TRIGGERED and self.triggered_time <= 0:
-                with self.app.app_context():
-                    self.stop()
-                    self.logger.info('trigger stop')
+            try:
+                time.sleep(1)
+                self.counter += 1
+                self.triggered_time -= 1
+                if self.triggered_time < 0:
+                    self.triggered_time = 0
+                if self.playing_mode is PlayingMode.TRIGGERED and self.triggered_time <= 0:
+                    with self.app.app_context():
+                        self.stop()
+                        self.logger.info('trigger stop')
 
-            if self.playing_mode in (PlayingMode.PLAYING, PlayingMode.TRIGGERED):
-                with self.app.app_context():
-                    self.ensure_playing()
-            if self.playing_mode is PlayingMode.STOPPED:
-                self.stop_playing()
-                self.playing_mode = PlayingMode.IDLE
-                self.logger.info('stopped playing')
+                if self.playing_mode in (PlayingMode.PLAYING, PlayingMode.TRIGGERED):
+                    with self.app.app_context():
+                        self.ensure_playing()
+                if self.playing_mode is PlayingMode.STOPPED:
+                    self.stop_playing()
+                    self.playing_mode = PlayingMode.IDLE
+                    self.logger.info('stopped playing')
+            except Exception as ex:
+                self.logger.exception(ex.args)
 
     def login(self):
         if request.method == 'POST':
